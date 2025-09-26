@@ -9,9 +9,9 @@
 #include "Addresses.h"
 
 #pragma comment(lib, "detours.lib")
-#define CodeCave(name)                      \
-    static void __declspec(naked)##name() { \
-        _asm
+#define CodeCave(name)                          \
+    static void __declspec(naked) name() {      \
+        __asm {
 #define EndCodeCave }
 
 // Set Hook for function

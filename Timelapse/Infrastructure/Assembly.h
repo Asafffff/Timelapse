@@ -8,9 +8,9 @@
 #include <cstring>
 
 #pragma comment(lib, "detours.lib")
-#define CodeCave(name)                      \
-    static void __declspec(naked)##name() { \
-        _asm
+#define CodeCave(name)                          \
+    static void __declspec(naked) name() {      \
+        __asm {
 #define EndCodeCave }
 
 bool SetHook(bool enable, void** function, void* redirection) {
