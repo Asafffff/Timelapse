@@ -660,7 +660,7 @@ void MainForm::tbAttackInterval_TextChanged(Object^  sender, EventArgs^  e) {
 	}
 }
 
-void MainForm::tbAttackMob_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^  e) {
+void MainForm::tbAttackMobCount_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^  e) {
 	if (!isKeyValid(sender, e, false)) e->Handled = true; //If key is not valid, do nothing and indicate that it has been handled
 }
 
@@ -865,7 +865,7 @@ void MainForm::AutoCCCSTimer_Tick(Object^  sender, EventArgs^  e) {
 	}
 
 	if (cbCCCSMob->Checked) {
-		if (ReadPointer(MobPoolBase, OFS_MobCount) < Convert::ToUInt32(tbCCCSMob->Text)) {
+		if (ReadPointer(MobPoolBase, OFS_MobCount) < Convert::ToUInt32(tbCCCSMobCount->Text)) {
 			if (rbCC->Checked) AutoCC(-1);
 			else AutoCS();
 		}
@@ -915,7 +915,7 @@ void MainForm::tbCCCSAttack_KeyPress(Object^  sender, Windows::Forms::KeyPressEv
 	if (!isKeyValid(sender, e, false)) e->Handled = true; //If key is not valid, do nothing and indicate that it has been handled
 }
 
-void MainForm::tbCCCSMob_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^  e) {
+void MainForm::tbCCCSMobCount_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^  e) {
 	if (!isKeyValid(sender, e, false)) e->Handled = true; //If key is not valid, do nothing and indicate that it has been handled
 }
 
@@ -1480,7 +1480,7 @@ void KamiLoop() {
 					Teleport(Assembly::ItemX, Assembly::ItemY + 10);
 				Sleep(Convert::ToUInt32(MainForm::TheInstance->tbKamiLootInterval->Text));
 			}
-			else if (ReadPointer(MobPoolBase, OFS_MobCount) > Convert::ToUInt32(MainForm::TheInstance->tbKamiMob->Text)) {
+			else if (ReadPointer(MobPoolBase, OFS_MobCount) > Convert::ToUInt32(MainForm::TheInstance->tbKamiMobCount->Text)) {
 				POINT telePoint;
 				telePoint.x = ReadMultiPointerSigned(MobPoolBase, 5, OFS_Mob1, OFS_Mob2, OFS_Mob3, OFS_Mob4, OFS_MobX) - Convert::ToInt32(MainForm::TheInstance->tbKamiX->Text);
 				telePoint.y = ReadMultiPointerSigned(MobPoolBase, 5, OFS_Mob1, OFS_Mob2, OFS_Mob3, OFS_Mob4, OFS_MobY) - Convert::ToInt32(MainForm::TheInstance->tbKamiY->Text);
@@ -1492,7 +1492,7 @@ void KamiLoop() {
 			}
 		}
 		else if (GlobalRefs::bKami) {
-			if(ReadPointer(MobPoolBase, OFS_MobCount) > Convert::ToUInt32(MainForm::TheInstance->tbKamiMob->Text)) {
+			if(ReadPointer(MobPoolBase, OFS_MobCount) > Convert::ToUInt32(MainForm::TheInstance->tbKamiMobCount->Text)) {
 				POINT telePoint;
 				telePoint.x = ReadMultiPointerSigned(MobPoolBase, 5, OFS_Mob1, OFS_Mob2, OFS_Mob3, OFS_Mob4, OFS_MobX) - Convert::ToInt32(MainForm::TheInstance->tbKamiX->Text);
 				telePoint.y = ReadMultiPointerSigned(MobPoolBase, 5, OFS_Mob1, OFS_Mob2, OFS_Mob3, OFS_Mob4, OFS_MobY) - Convert::ToInt32(MainForm::TheInstance->tbKamiY->Text);
@@ -1518,7 +1518,7 @@ void MainForm::cbKami_CheckedChanged(System::Object^  sender, System::EventArgs^
 		tbKamiX->Enabled = false;
 		tbKamiY->Enabled = false;
 		tbKamiInterval->Enabled = false;
-		tbKamiMob->Enabled = false;
+		tbKamiMobCount->Enabled = false;
 		GlobalRefs::bKami = true;
 		if(!GlobalRefs::bKamiLoot)
 			NewThread(KamiLoop);
@@ -1528,7 +1528,7 @@ void MainForm::cbKami_CheckedChanged(System::Object^  sender, System::EventArgs^
 		tbKamiX->Enabled = true;
 		tbKamiY->Enabled = true;
 		tbKamiInterval->Enabled = true;
-		tbKamiMob->Enabled = true;
+		tbKamiMobCount->Enabled = true;
 	}
 }
 
@@ -1563,7 +1563,7 @@ void MainForm::tbKamiInterval_KeyPress(Object^  sender, Windows::Forms::KeyPress
 	if (!isKeyValid(sender, e, false)) e->Handled = true; //If key is not valid, do nothing and indicate that it has been handled
 }
 
-void MainForm::tbKamiMob_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^  e) {
+void MainForm::tbKamiMobCount_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^  e) {
 	if (!isKeyValid(sender, e, false)) e->Handled = true; //If key is not valid, do nothing and indicate that it has been handled
 }
 

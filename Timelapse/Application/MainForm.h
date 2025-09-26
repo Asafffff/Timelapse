@@ -155,7 +155,7 @@ private: System::Windows::Forms::Button^  bDupeXGetFoothold;
 	private: System::Windows::Forms::Label^  label56;
 	public: System::Windows::Forms::TextBox^  tbKamiX;
 	private: System::Windows::Forms::Label^  label55;
-	public: System::Windows::Forms::TextBox^  tbKamiMob;
+	public: System::Windows::Forms::TextBox^  tbKamiMobCount;
 	public: System::Windows::Forms::TextBox^  tbKamiInterval;
 	private: System::Windows::Forms::Label^  label53;
 	private: System::Windows::Forms::Label^  label54;
@@ -328,7 +328,7 @@ private:
 	public: System::Windows::Forms::ComboBox^  comboChannelKey;
 	private: System::Windows::Forms::Label^  label47;
 	private: System::Windows::Forms::Panel^  panel7;
-	private: System::Windows::Forms::TextBox^  tbCCCSMob;
+	private: System::Windows::Forms::TextBox^  tbCCCSMobCount;
 	private: System::Windows::Forms::TextBox^  tbCCCSAttack;
 	private: System::Windows::Forms::TextBox^  tbCCCSPeople;
 	private: System::Windows::Forms::TextBox^  tbCCCSTime;
@@ -350,7 +350,7 @@ private:
 	private: System::Windows::Forms::Label^  label31;
 	private: System::Windows::Forms::ComboBox^  comboLootKey;
 	public: System::Windows::Forms::CheckBox^  cbLoot;
-	public: System::Windows::Forms::TextBox^  tbAttackMob;
+	public: System::Windows::Forms::TextBox^  tbAttackMobCount;
 	private: System::Windows::Forms::TextBox^  tbAttackInterval;
 	private: System::Windows::Forms::Label^  label30;
 	private: System::Windows::Forms::Label^  label28;
@@ -606,7 +606,7 @@ public:
 			this->comboChannelKey = (gcnew System::Windows::Forms::ComboBox());
 			this->label47 = (gcnew System::Windows::Forms::Label());
 			this->panel7 = (gcnew System::Windows::Forms::Panel());
-			this->tbCCCSMob = (gcnew System::Windows::Forms::TextBox());
+			this->tbCCCSMobCount = (gcnew System::Windows::Forms::TextBox());
 			this->tbCCCSAttack = (gcnew System::Windows::Forms::TextBox());
 			this->tbCCCSPeople = (gcnew System::Windows::Forms::TextBox());
 			this->tbCCCSTime = (gcnew System::Windows::Forms::TextBox());
@@ -633,7 +633,7 @@ public:
 			this->tbLootItem = (gcnew System::Windows::Forms::TextBox());
 			this->tbAttackInterval = (gcnew System::Windows::Forms::TextBox());
 			this->tbLootInterval = (gcnew System::Windows::Forms::TextBox());
-			this->tbAttackMob = (gcnew System::Windows::Forms::TextBox());
+			this->tbAttackMobCount = (gcnew System::Windows::Forms::TextBox());
 			this->label31 = (gcnew System::Windows::Forms::Label());
 			this->label29 = (gcnew System::Windows::Forms::Label());
 			this->label28 = (gcnew System::Windows::Forms::Label());
@@ -790,7 +790,7 @@ public:
 			this->label56 = (gcnew System::Windows::Forms::Label());
 			this->tbKamiX = (gcnew System::Windows::Forms::TextBox());
 			this->label55 = (gcnew System::Windows::Forms::Label());
-			this->tbKamiMob = (gcnew System::Windows::Forms::TextBox());
+			this->tbKamiMobCount = (gcnew System::Windows::Forms::TextBox());
 			this->tbKamiInterval = (gcnew System::Windows::Forms::TextBox());
 			this->label53 = (gcnew System::Windows::Forms::Label());
 			this->label54 = (gcnew System::Windows::Forms::Label());
@@ -2651,7 +2651,7 @@ public:
 			// panel7
 			// 
 			this->panel7->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
-			this->panel7->Controls->Add(this->tbCCCSMob);
+			this->panel7->Controls->Add(this->tbCCCSMobCount);
 			this->panel7->Controls->Add(this->tbCCCSAttack);
 			this->panel7->Controls->Add(this->tbCCCSPeople);
 			this->panel7->Controls->Add(this->tbCCCSTime);
@@ -2670,19 +2670,19 @@ public:
 			this->panel7->Size = System::Drawing::Size(197, 164);
 			this->panel7->TabIndex = 2;
 			// 
-			// tbCCCSMob
+			// tbCCCSMobCount
 			// 
-			this->tbCCCSMob->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(35)), static_cast<System::Int32>(static_cast<System::Byte>(35)),
+			this->tbCCCSMobCount->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(35)), static_cast<System::Int32>(static_cast<System::Byte>(35)),
 				static_cast<System::Int32>(static_cast<System::Byte>(35)));
-			this->tbCCCSMob->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
-			this->tbCCCSMob->ForeColor = System::Drawing::Color::White;
-			this->tbCCCSMob->Location = System::Drawing::Point(111, 132);
-			this->tbCCCSMob->Name = L"tbCCCSMob";
-			this->tbCCCSMob->Size = System::Drawing::Size(78, 21);
-			this->tbCCCSMob->TabIndex = 16;
-			this->tbCCCSMob->Text = L"1";
-			this->tbCCCSMob->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
-			this->tbCCCSMob->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MainForm::tbCCCSMob_KeyPress);
+			this->tbCCCSMobCount->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
+			this->tbCCCSMobCount->ForeColor = System::Drawing::Color::White;
+			this->tbCCCSMobCount->Location = System::Drawing::Point(111, 132);
+			this->tbCCCSMobCount->Name = L"tbCCCSMobCount";
+			this->tbCCCSMobCount->Size = System::Drawing::Size(78, 21);
+			this->tbCCCSMobCount->TabIndex = 16;
+			this->tbCCCSMobCount->Text = L"1";
+			this->tbCCCSMobCount->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+			this->tbCCCSMobCount->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MainForm::tbCCCSMobCount_KeyPress);
 			// 
 			// tbCCCSAttack
 			// 
@@ -2907,7 +2907,7 @@ public:
 			this->panel2->Controls->Add(this->tbLootItem);
 			this->panel2->Controls->Add(this->tbAttackInterval);
 			this->panel2->Controls->Add(this->tbLootInterval);
-			this->panel2->Controls->Add(this->tbAttackMob);
+			this->panel2->Controls->Add(this->tbAttackMobCount);
 			this->panel2->Controls->Add(this->label31);
 			this->panel2->Controls->Add(this->label29);
 			this->panel2->Controls->Add(this->label28);
@@ -3018,19 +3018,19 @@ public:
 			this->tbLootInterval->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
 			this->tbLootInterval->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MainForm::tbLootInterval_KeyPress);
 			// 
-			// tbAttackMob
+			// tbAttackMobCount
 			// 
-			this->tbAttackMob->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(35)), static_cast<System::Int32>(static_cast<System::Byte>(35)),
+			this->tbAttackMobCount->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(35)), static_cast<System::Int32>(static_cast<System::Byte>(35)),
 				static_cast<System::Int32>(static_cast<System::Byte>(35)));
-			this->tbAttackMob->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
-			this->tbAttackMob->ForeColor = System::Drawing::Color::White;
-			this->tbAttackMob->Location = System::Drawing::Point(132, 53);
-			this->tbAttackMob->Name = L"tbAttackMob";
-			this->tbAttackMob->Size = System::Drawing::Size(28, 21);
-			this->tbAttackMob->TabIndex = 9;
-			this->tbAttackMob->Text = L"0";
-			this->tbAttackMob->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
-			this->tbAttackMob->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MainForm::tbAttackMob_KeyPress);
+			this->tbAttackMobCount->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
+			this->tbAttackMobCount->ForeColor = System::Drawing::Color::White;
+			this->tbAttackMobCount->Location = System::Drawing::Point(132, 53);
+			this->tbAttackMobCount->Name = L"tbAttackMobCount";
+			this->tbAttackMobCount->Size = System::Drawing::Size(28, 21);
+			this->tbAttackMobCount->TabIndex = 9;
+			this->tbAttackMobCount->Text = L"0";
+			this->tbAttackMobCount->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+			this->tbAttackMobCount->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MainForm::tbAttackMobCount_KeyPress);
 			// 
 			// label31
 			// 
@@ -5035,7 +5035,7 @@ public:
 			this->panel14->Controls->Add(this->label56);
 			this->panel14->Controls->Add(this->tbKamiX);
 			this->panel14->Controls->Add(this->label55);
-			this->panel14->Controls->Add(this->tbKamiMob);
+			this->panel14->Controls->Add(this->tbKamiMobCount);
 			this->panel14->Controls->Add(this->tbKamiInterval);
 			this->panel14->Controls->Add(this->label53);
 			this->panel14->Controls->Add(this->label54);
@@ -5093,19 +5093,19 @@ public:
 			this->label55->TabIndex = 12;
 			this->label55->Text = L"X:";
 			// 
-			// tbKamiMob
+			// tbKamiMobCount
 			// 
-			this->tbKamiMob->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(35)), static_cast<System::Int32>(static_cast<System::Byte>(35)),
+			this->tbKamiMobCount->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(35)), static_cast<System::Int32>(static_cast<System::Byte>(35)),
 				static_cast<System::Int32>(static_cast<System::Byte>(35)));
-			this->tbKamiMob->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
-			this->tbKamiMob->ForeColor = System::Drawing::Color::White;
-			this->tbKamiMob->Location = System::Drawing::Point(87, 69);
-			this->tbKamiMob->Name = L"tbKamiMob";
-			this->tbKamiMob->Size = System::Drawing::Size(40, 21);
-			this->tbKamiMob->TabIndex = 9;
-			this->tbKamiMob->Text = L"0";
-			this->tbKamiMob->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
-			this->tbKamiMob->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MainForm::tbKamiMob_KeyPress);
+			this->tbKamiMobCount->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
+			this->tbKamiMobCount->ForeColor = System::Drawing::Color::White;
+			this->tbKamiMobCount->Location = System::Drawing::Point(87, 69);
+			this->tbKamiMobCount->Name = L"tbKamiMobCount";
+			this->tbKamiMobCount->Size = System::Drawing::Size(40, 21);
+			this->tbKamiMobCount->TabIndex = 9;
+			this->tbKamiMobCount->Text = L"0";
+			this->tbKamiMobCount->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+			this->tbKamiMobCount->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MainForm::tbKamiMobCount_KeyPress);
 			// 
 			// tbKamiInterval
 			// 
@@ -6625,7 +6625,7 @@ public:
 	private: System::Void tbHP_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
 	private: System::Void tbMP_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
 	private: System::Void tbAttackInterval_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
-	private: System::Void tbAttackMob_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
+	private: System::Void tbAttackMobCount_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
 	private: System::Void tbLootInterval_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
 	private: System::Void tbLootItem_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
 	private: System::Void tbAPLevel_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
@@ -6639,7 +6639,7 @@ public:
 	private: System::Void tbCCCSTime_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
 	private: System::Void tbCCCSPeople_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
 	private: System::Void tbCCCSAttack_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
-	private: System::Void tbCCCSMob_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
+	private: System::Void tbCCCSMobCount_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
 	private: System::Void tbCSDelay_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
 	private: System::Void tbClickTeleport_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
 	private: System::Void tbMouseTeleport_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
@@ -6651,7 +6651,7 @@ public:
 	private: System::Void tbKamiX_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
 	private: System::Void tbKamiY_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
 	private: System::Void tbKamiInterval_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
-	private: System::Void tbKamiMob_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
+	private: System::Void tbKamiMobCount_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
 	private: System::Void tbKamiLootInterval_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
 	private: System::Void tbKamiLootItem_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
 	private: System::Void tbWallVacX_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
