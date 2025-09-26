@@ -13,6 +13,8 @@
 #include "../Infrastructure/Hooks.h"
 #include "../Logging/Log.h"
 
+bool isKeyValid(System::Object ^ sender, System::Windows::Forms::KeyPressEventArgs ^ e, bool isSigned);
+
 namespace Timelapse {
 
 ref struct GlobalRefs {
