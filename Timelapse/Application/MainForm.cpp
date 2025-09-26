@@ -2,17 +2,18 @@
 #include <cliext/vector>
 #include <sstream>
 #include "MainForm.h"
-#include "Addresses.h"
 #include "Macro.h"
-#include "Packet.h"
-#include "Structs.h"
 #include "Settings.h"
-#include "Log.h"
-#include "Hooks.h"
+#include "../Core/Packet.h"
+#include "../Core/Structs.h"
+#include "../Infrastructure/Addresses.h"
+#include "../Infrastructure/Hooks.h"
+#include "../Logging/Log.h"
 
 [assembly:System::Diagnostics::DebuggableAttribute(true, true)]; //For debugging purposes
 
 using namespace Timelapse;
+using namespace Timelapse::Logging;
 
 //Forward declarations
 void AutoLogin();
@@ -68,19 +69,36 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD dwReason, PVOID lpvReserved) {
 
 #pragma managed
 void MainForm::MainForm_Load(Object^  sender, EventArgs^  e) {
-	Log::WriteLineToConsole(":::::::::::::::::::::::::::::::::::::::::");
-	Log::WriteLineToConsole(":::         Timelapse Trainer         :::");
-	Log::WriteLineToConsole(":::::::::::::::::::::::::::::::::::::::::");
-	Log::WriteLineToConsole("Use: Extreme Injector v3.7.2");
-	Log::WriteLineToConsole("Initializing Timelapse trainer ....");
-	RECT msRect;
-	GetWindowRect(GetMSWindowHandle(), &msRect);
-	this->Left = msRect.right;
-	this->Top = msRect.top;
+        Log::Initialize(gcnew ConsoleLogHandler(this, &MainForm::AppendToConsoleLog));
+        Log::WriteLineToConsole(":::::::::::::::::::::::::::::::::::::::::");
+        Log::WriteLineToConsole(":::         Timelapse Trainer         :::");
+        Log::WriteLineToConsole(":::::::::::::::::::::::::::::::::::::::::");
+        Log::WriteLineToConsole("Use: Extreme Injector v3.7.2");
+        Log::WriteLineToConsole("Initializing Timelapse trainer ....");
+        RECT msRect;
+        GetWindowRect(GetMSWindowHandle(), &msRect);
+        this->Left = msRect.right;
+        this->Top = msRect.top;
+}
+
+void MainForm::AppendToConsoleLog(String^ message) {
+        if (String::IsNullOrEmpty(message)) {
+                return;
+        }
+
+        const int LOG_MAX_LINES = 200;
+        String^ timestamp = DateTime::Now.ToString("HH:mm::ss.fff");
+        String^ entry = String::Format("{0}: {1}", timestamp, message);
+
+        lbConsoleLog->Items->Insert(0, entry);
+
+        while (lbConsoleLog->Items->Count > LOG_MAX_LINES) {
+                lbConsoleLog->Items->RemoveAt(lbConsoleLog->Items->Count - 1);
+        }
 }
 
 void MainForm::MainForm_Shown(Object^  sender, EventArgs^  e) {
-	this->Refresh();
+        this->Refresh();
 
 	for (double i = 0.100; i < 0.9;) {
 		i += 0.1;

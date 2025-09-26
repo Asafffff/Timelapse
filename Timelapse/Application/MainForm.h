@@ -11,12 +11,13 @@ namespace Timelapse {
 
 	public ref class MainForm : public System::Windows::Forms::Form {
 
-	public:
-		static MainForm ^TheInstance;
-		MainForm() {
-			InitializeComponent();
-			TheInstance = this;
-		}
+        public:
+                static MainForm ^TheInstance;
+                MainForm() {
+                        InitializeComponent();
+                        TheInstance = this;
+                }
+                void AppendToConsoleLog(String^ message);
 	protected:
 		/// <summary>
 		/// Clean up any resources being used.

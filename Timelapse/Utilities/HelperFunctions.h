@@ -1,5 +1,5 @@
 #pragma once
-#include "Functions.h"
+#include "../Infrastructure/MapleFunctions.h"
 
 using namespace System;
 

@@ -1,7 +1,9 @@
 #include "Packet.h"
 #include "Structs.h"
-#include "GeneralFunctions.h"
-#include "Log.h"
+#include "../Utilities/GeneralFunctions.h"
+#include "../Logging/Log.h"
+
+using namespace Timelapse::Logging;
 
 // TODO: rewrite in c++ WinSock Style
 // Hooking client may not be available however hooking windows sockets api will be

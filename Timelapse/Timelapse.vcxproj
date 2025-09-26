@@ -139,40 +139,43 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Inventory.cpp" />
-    <ClCompile Include="Log.cpp" />
-    <ClCompile Include="MainForm.cpp" />
-    <ClCompile Include="Mouse.cpp" />
-    <ClCompile Include="Packet.cpp" />
-    <ClCompile Include="Settings.cpp" />
+    <ClCompile Include="Application\MainForm.cpp" />
+    <ClCompile Include="Application\Settings.cpp" />
+    <ClCompile Include="Core\Inventory.cpp" />
+    <ClCompile Include="Core\Packet.cpp" />
+    <ClCompile Include="Input\Mouse.cpp" />
+    <ClCompile Include="Logging\Log.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Hooks.h" />
-    <ClInclude Include="detours.h" />
-    <ClInclude Include="GeneralFunctions.h" />
-    <ClInclude Include="Inventory.h" />
-    <ClInclude Include="Log.h" />
-    <ClInclude Include="Macro.h" />
-    <ClInclude Include="MapleFunctions.h" />
-    <ClInclude Include="Memory.h" />
-    <ClInclude Include="Mouse.h" />
-    <ClInclude Include="Packet.h" />
-    <ClInclude Include="Addresses.h" />
-    <ClInclude Include="MainForm.h">
+    <ClInclude Include="Application\Macro.h" />
+    <ClInclude Include="Application\Settings.h" />
+    <ClInclude Include="Core\Inventory.h" />
+    <ClInclude Include="Core\Packet.h" />
+    <ClInclude Include="Core\Structs.h" />
+    <ClInclude Include="Infrastructure\Addresses.h" />
+    <ClInclude Include="Infrastructure\Assembly.h" />
+    <ClInclude Include="Infrastructure\Hooks.h" />
+    <ClInclude Include="Infrastructure\MapleFunctions.h" />
+    <ClInclude Include="Infrastructure\Memory.h" />
+    <ClInclude Include="Input\Keyboard.h" />
+    <ClInclude Include="Input\Mouse.h" />
+    <ClInclude Include="Libraries\detours.h" />
+    <ClInclude Include="Logging\Log.h" />
+    <ClInclude Include="Utilities\GeneralFunctions.h" />
+    <ClInclude Include="Utilities\HelperFunctions.h" />
+    <ClInclude Include="Application\MainForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
-    <ClInclude Include="resource.h" />
-    <ClInclude Include="Settings.h" />
-    <ClInclude Include="Structs.h" />
+    <ClInclude Include="Resources\resource.h" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="MainForm.resx">
+    <EmbeddedResource Include="Application\MainForm.resx">
       <DependentUpon>MainForm.h</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Timelapse.rc" />
+    <ResourceCompile Include="Resources\Timelapse.rc" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\Timelapse.ico" />
@@ -183,7 +186,7 @@
     <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
-    <Library Include="detours.lib" />
+    <Library Include="Libraries\detours.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
