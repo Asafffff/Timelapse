@@ -373,25 +373,33 @@ void MainForm::GUITimer_Tick(Object^  sender, EventArgs^  e) {
 		lbEXP->Text = PointerFuncs::getCharEXP();
 		lbMesos->Text = PointerFuncs::getCharMesos().ToString("N0");
 
-		lbWorld->Text = PointerFuncs::getWorld();
-		lbChannel->Text = PointerFuncs::getChannel();
-		lbMapID->Text = PointerFuncs::getMapID();
-		lbWalls->Text = PointerFuncs::getMapLeftWall() + " " + PointerFuncs::getMapRightWall() + " " + PointerFuncs::getMapTopWall() + " " + PointerFuncs::getMapBottomWall();
-		
-		lbCharFoothold->Text = PointerFuncs::getCharFoothold();
-		lbCharAnimation->Text = PointerFuncs::getCharAnimation();
-		lbCharPos->Text = PointerFuncs::getCharPos();
-		lbMousePos->Text = PointerFuncs::getMousePos();
+                lbWorld->Text = PointerFuncs::getWorld();
+                lbChannel->Text = PointerFuncs::getChannel().ToString();
+                lbMapID->Text = PointerFuncs::getMapID().ToString();
+                lbWalls->Text = System::String::Format("{0} {1} {2} {3}",
+                        PointerFuncs::getMapLeftWall(),
+                        PointerFuncs::getMapRightWall(),
+                        PointerFuncs::getMapTopWall(),
+                        PointerFuncs::getMapBottomWall());
 
-		lbAttackCount->Text = PointerFuncs::getAttackCount();
-		lbBuffCount->Text = PointerFuncs::getBuffCount();
-		lbBreathCount->Text = PointerFuncs::getBreathCount();
-		lbPeopleCount->Text = PointerFuncs::getPeopleCount();
-		lbMobCount->Text = PointerFuncs::getMobCount();
-		lbItemCount->Text = PointerFuncs::getItemCount();
-		lbPortalCount->Text = PointerFuncs::getPortalCount();
-		lbNPCCount->Text = PointerFuncs::getNPCCount();
-	}
+                lbCharFoothold->Text = PointerFuncs::getCharFoothold().ToString();
+                lbCharAnimation->Text = PointerFuncs::getCharAnimation().ToString();
+
+                System::Drawing::Point charPos = PointerFuncs::getCharPos();
+                lbCharPos->Text = "(" + charPos.X.ToString() + ", " + charPos.Y.ToString() + ")";
+
+                System::Drawing::Point mousePos = PointerFuncs::getMousePos();
+                lbMousePos->Text = "(" + mousePos.X.ToString() + ", " + mousePos.Y.ToString() + ")";
+
+                lbAttackCount->Text = PointerFuncs::getAttackCount().ToString();
+                lbBuffCount->Text = PointerFuncs::getBuffCount().ToString();
+                lbBreathCount->Text = PointerFuncs::getBreathCount().ToString();
+                lbPeopleCount->Text = PointerFuncs::getPeopleCount().ToString();
+                lbMobCount->Text = PointerFuncs::getMobCount().ToString();
+                lbItemCount->Text = PointerFuncs::getItemCount().ToString();
+                lbPortalCount->Text = PointerFuncs::getPortalCount().ToString();
+                lbNPCCount->Text = PointerFuncs::getNPCCount().ToString();
+        }
 }
 #pragma endregion
 
@@ -778,7 +786,7 @@ void MainForm::tbBuffInterval_KeyPress(Object^  sender, Windows::Forms::KeyPress
 //TODO: add option to whitelist or blacklist channels
 
 void CallCSFunc() {
-	if (PointerFuncs::getMapID()->Equals("0")) return;
+        if (PointerFuncs::getMapID() == 0) return;
 	WritePointer(UserLocalBase, OFS_Breath, 0);
 	CWvsContext__SendMigrateToShopRequest(*(PVOID*)ServerBase, (PVOID)0x2FDFE1D, 0);
 	Sleep(Convert::ToUInt32(MainForm::TheInstance->tbCSDelay->Text));
@@ -1344,8 +1352,8 @@ void TeleportLoop() {
 }
 
 void MainForm::bTeleportGetCurrentLocation_Click(Object^  sender, EventArgs^  e) {
-	tbTeleportX->Text = PointerFuncs::getCharPosX();
-	tbTeleportY->Text = PointerFuncs::getCharPosY();
+        tbTeleportX->Text = PointerFuncs::getCharPosX().ToString();
+        tbTeleportY->Text = PointerFuncs::getCharPosY().ToString();
 }
 
 void MainForm::bTeleportAdd_Click(Object^  sender, EventArgs^  e) {
@@ -1415,9 +1423,9 @@ void MainForm::tbTeleportLoopDelay_KeyPress(Object^  sender, Windows::Forms::Key
 
 #pragma region Spawn Control
 void MainForm::bSpawnControlGetCurrentLocation_Click(Object^  sender, EventArgs^  e) {
-	tbSpawnControlX->Text = PointerFuncs::getCharPosX();
-	tbSpawnControlY->Text = PointerFuncs::getCharPosY();
-	tbSpawnControlMapID->Text = PointerFuncs::getMapID();
+        tbSpawnControlX->Text = PointerFuncs::getCharPosX().ToString();
+        tbSpawnControlY->Text = PointerFuncs::getCharPosY().ToString();
+        tbSpawnControlMapID->Text = PointerFuncs::getMapID().ToString();
 }
 
 void MainForm::bSpawnControlAdd_Click(Object^  sender, EventArgs^  e) {
@@ -1645,8 +1653,8 @@ void MainForm::cbWallVac_CheckedChanged(System::Object^  sender, System::EventAr
 }
 
 void MainForm::bWallVacGetCurrentLocation_Click(System::Object^  sender, System::EventArgs^  e) {
-	tbWallVacX->Text = PointerFuncs::getCharPosX();
-	tbWallVacY->Text = PointerFuncs::getCharPosY();
+        tbWallVacX->Text = PointerFuncs::getCharPosX().ToString();
+        tbWallVacY->Text = PointerFuncs::getCharPosY().ToString();
 }
 
 void MainForm::tbWallVacX_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^  e) {
@@ -1795,8 +1803,8 @@ void MainForm::cbUEMI_CheckedChanged(System::Object^  sender, System::EventArgs^
 }
 
 void MainForm::bUEMIGetCurrentLocation_Click(System::Object^  sender, System::EventArgs^  e) {
-	tbUEMIx->Text = PointerFuncs::getCharPosX();
-	tbUEMIy->Text = PointerFuncs::getCharPosY();
+        tbUEMIx->Text = PointerFuncs::getCharPosX().ToString();
+        tbUEMIy->Text = PointerFuncs::getCharPosY().ToString();
 }
 #pragma endregion
 
@@ -2844,7 +2852,7 @@ static void findMapNamesStartingWithStr(String^ str) {
 //Starts Map Rush when clicked
 void MainForm::bMapRush_Click(System::Object^  sender, System::EventArgs^  e) {
 	//auto start = std::chrono::high_resolution_clock::now();
-	if(!GlobalRefs::isMapRushing && !PointerFuncs::getMapID()->Equals("0")) {
+        if(!GlobalRefs::isMapRushing && PointerFuncs::getMapID() != 0) {
 		int mapDestID = 0;
 		if (INT::TryParse(tbMapRusherDestination->Text, mapDestID))
 			if (mapDestID >= 0 && mapDestID <= 999999999)
