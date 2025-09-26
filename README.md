@@ -87,7 +87,7 @@ A MapleStory v83 Trainer
 - All readpointers/readmultipointers pointer functions should return integer values, caller function should convert to string. Only applicable to number values, not text values
 - Look into disabling textbox values if something is checked, also remove all textChanged events
 - Fix aesthetics of listviews (accommodating for vertical scrollbars), and make sure all listview code is identical in terms of adding/deleting/searching
-- Look into changing names of certain textboxes to add Count (ie tbLootItem should be tbLootItemCount)
+- Look into changing names of certain textboxes to add a Count suffix where appropriate
 - Look into changing names of all textboxes with name "interval" to "delay", makes more sense
 - For all new number only textboxes, double check to see if the keypress event (in MainForm.h) is defined
 - Check to make sure all char arrays are textual and unsigned char are for memory usage

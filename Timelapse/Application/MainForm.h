@@ -145,7 +145,7 @@ private: System::Windows::Forms::Button^  bDupeXGetFoothold;
 	private: System::Windows::Forms::Label^  label52;
 	private: System::Windows::Forms::CheckBox^  cbWallVac;
 	private: System::Windows::Forms::Panel^  panel13;
-	public: System::Windows::Forms::TextBox^  tbKamiLootItem;
+	public: System::Windows::Forms::TextBox^  tbKamiLootItemCount;
 	public: System::Windows::Forms::TextBox^  tbKamiLootInterval;
 	private: System::Windows::Forms::Label^  label57;
 	private: System::Windows::Forms::Label^  label58;
@@ -344,7 +344,7 @@ private:
 	private: System::Windows::Forms::CheckBox^  cbCCCSTime;
 	public: System::Windows::Forms::RadioButton^  rbFunction;
 	public: System::Windows::Forms::RadioButton^  rbPacket;
-	public: System::Windows::Forms::TextBox^  tbLootItem;
+	public: System::Windows::Forms::TextBox^  tbLootItemCount;
 	private: System::Windows::Forms::TextBox^  tbLootInterval;
 	private: System::Windows::Forms::Label^  label29;
 	private: System::Windows::Forms::Label^  label31;
@@ -630,7 +630,7 @@ public:
 			this->HPPotDelay = (gcnew System::Windows::Forms::TextBox());
 			this->label93 = (gcnew System::Windows::Forms::Label());
 			this->label91 = (gcnew System::Windows::Forms::Label());
-			this->tbLootItem = (gcnew System::Windows::Forms::TextBox());
+			this->tbLootItemCount = (gcnew System::Windows::Forms::TextBox());
 			this->tbAttackInterval = (gcnew System::Windows::Forms::TextBox());
 			this->tbLootInterval = (gcnew System::Windows::Forms::TextBox());
 			this->tbAttackMobCount = (gcnew System::Windows::Forms::TextBox());
@@ -780,7 +780,7 @@ public:
 			this->label52 = (gcnew System::Windows::Forms::Label());
 			this->cbWallVac = (gcnew System::Windows::Forms::CheckBox());
 			this->panel13 = (gcnew System::Windows::Forms::Panel());
-			this->tbKamiLootItem = (gcnew System::Windows::Forms::TextBox());
+			this->tbKamiLootItemCount = (gcnew System::Windows::Forms::TextBox());
 			this->tbKamiLootInterval = (gcnew System::Windows::Forms::TextBox());
 			this->label57 = (gcnew System::Windows::Forms::Label());
 			this->label58 = (gcnew System::Windows::Forms::Label());
@@ -2904,7 +2904,7 @@ public:
 			this->panel2->Controls->Add(this->HPPotDelay);
 			this->panel2->Controls->Add(this->label93);
 			this->panel2->Controls->Add(this->label91);
-			this->panel2->Controls->Add(this->tbLootItem);
+			this->panel2->Controls->Add(this->tbLootItemCount);
 			this->panel2->Controls->Add(this->tbAttackInterval);
 			this->panel2->Controls->Add(this->tbLootInterval);
 			this->panel2->Controls->Add(this->tbAttackMobCount);
@@ -2976,19 +2976,19 @@ public:
 			this->label91->TabIndex = 11;
 			this->label91->Text = L"Delay[ms]:";
 			// 
-			// tbLootItem
+			// tbLootItemCount
 			// 
-			this->tbLootItem->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(35)), static_cast<System::Int32>(static_cast<System::Byte>(35)),
+			this->tbLootItemCount->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(35)), static_cast<System::Int32>(static_cast<System::Byte>(35)),
 				static_cast<System::Int32>(static_cast<System::Byte>(35)));
-			this->tbLootItem->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
-			this->tbLootItem->ForeColor = System::Drawing::Color::White;
-			this->tbLootItem->Location = System::Drawing::Point(132, 78);
-			this->tbLootItem->Name = L"tbLootItem";
-			this->tbLootItem->Size = System::Drawing::Size(28, 21);
-			this->tbLootItem->TabIndex = 9;
-			this->tbLootItem->Text = L"0";
-			this->tbLootItem->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
-			this->tbLootItem->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MainForm::tbLootItem_KeyPress);
+			this->tbLootItemCount->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
+			this->tbLootItemCount->ForeColor = System::Drawing::Color::White;
+			this->tbLootItemCount->Location = System::Drawing::Point(132, 78);
+			this->tbLootItemCount->Name = L"tbLootItemCount";
+			this->tbLootItemCount->Size = System::Drawing::Size(28, 21);
+			this->tbLootItemCount->TabIndex = 9;
+			this->tbLootItemCount->Text = L"0";
+			this->tbLootItemCount->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+			this->tbLootItemCount->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MainForm::tbLootItemCount_KeyPress);
 			// 
 			// tbAttackInterval
 			// 
@@ -4957,7 +4957,7 @@ public:
 			// panel13
 			// 
 			this->panel13->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
-			this->panel13->Controls->Add(this->tbKamiLootItem);
+			this->panel13->Controls->Add(this->tbKamiLootItemCount);
 			this->panel13->Controls->Add(this->tbKamiLootInterval);
 			this->panel13->Controls->Add(this->label57);
 			this->panel13->Controls->Add(this->label58);
@@ -4967,19 +4967,19 @@ public:
 			this->panel13->Size = System::Drawing::Size(132, 70);
 			this->panel13->TabIndex = 7;
 			// 
-			// tbKamiLootItem
+			// tbKamiLootItemCount
 			// 
-			this->tbKamiLootItem->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(35)), static_cast<System::Int32>(static_cast<System::Byte>(35)),
+			this->tbKamiLootItemCount->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(35)), static_cast<System::Int32>(static_cast<System::Byte>(35)),
 				static_cast<System::Int32>(static_cast<System::Byte>(35)));
-			this->tbKamiLootItem->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
-			this->tbKamiLootItem->ForeColor = System::Drawing::Color::White;
-			this->tbKamiLootItem->Location = System::Drawing::Point(87, 42);
-			this->tbKamiLootItem->Name = L"tbKamiLootItem";
-			this->tbKamiLootItem->Size = System::Drawing::Size(40, 21);
-			this->tbKamiLootItem->TabIndex = 9;
-			this->tbKamiLootItem->Text = L"0";
-			this->tbKamiLootItem->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
-			this->tbKamiLootItem->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MainForm::tbKamiLootItem_KeyPress);
+			this->tbKamiLootItemCount->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
+			this->tbKamiLootItemCount->ForeColor = System::Drawing::Color::White;
+			this->tbKamiLootItemCount->Location = System::Drawing::Point(87, 42);
+			this->tbKamiLootItemCount->Name = L"tbKamiLootItemCount";
+			this->tbKamiLootItemCount->Size = System::Drawing::Size(40, 21);
+			this->tbKamiLootItemCount->TabIndex = 9;
+			this->tbKamiLootItemCount->Text = L"0";
+			this->tbKamiLootItemCount->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+			this->tbKamiLootItemCount->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MainForm::tbKamiLootItemCount_KeyPress);
 			// 
 			// tbKamiLootInterval
 			// 
@@ -6627,7 +6627,7 @@ public:
 	private: System::Void tbAttackInterval_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
 	private: System::Void tbAttackMobCount_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
 	private: System::Void tbLootInterval_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
-	private: System::Void tbLootItem_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
+	private: System::Void tbLootItemCount_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
 	private: System::Void tbAPLevel_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
 	private: System::Void tbAPHP_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
 	private: System::Void tbAPMP_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
@@ -6653,7 +6653,7 @@ public:
 	private: System::Void tbKamiInterval_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
 	private: System::Void tbKamiMobCount_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
 	private: System::Void tbKamiLootInterval_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
-	private: System::Void tbKamiLootItem_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
+	private: System::Void tbKamiLootItemCount_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
 	private: System::Void tbWallVacX_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
 	private: System::Void tbWallVacY_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
 	private: System::Void tbWallVacRangeX_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
