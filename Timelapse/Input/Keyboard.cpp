@@ -1,5 +1,6 @@
 #include <stdexcept>
 #include <iostream>
+#include <array>
 #include "Keyboard.h"
 
 namespace KeyboardInput {
@@ -89,14 +90,23 @@ namespace KeyboardInput {
 			break;
 			}
 		}
-		char name[128];
-		if (GetKeyNameText(lParam << 16, (LPWSTR)name, 128)) {
-			name_ = std::string(name);
-		}
-		else {
-			std::cerr << "Cannot get key name";
-			name_ = "<unknown key>";
-		}
+                std::array<wchar_t, 128> name{};
+                if (GetKeyNameTextW(lParam << 16, name.data(), static_cast<int>(name.size()))) {
+                        int requiredLength = WideCharToMultiByte(CP_UTF8, 0, name.data(), -1, nullptr, 0, nullptr, nullptr);
+                        if (requiredLength > 0) {
+                                std::string utf8Name(static_cast<size_t>(requiredLength - 1), '\0');
+                                WideCharToMultiByte(CP_UTF8, 0, name.data(), -1, utf8Name.data(), requiredLength, nullptr, nullptr);
+                                name_ = utf8Name;
+                        }
+                        else {
+                                std::cerr << "Cannot convert key name to UTF-8";
+                                name_ = "<unknown key>";
+                        }
+                }
+                else {
+                        std::cerr << "Cannot get key name";
+                        name_ = "<unknown key>";
+                }
 	}
 
 	WORD Key_win::virtualKey() const {
