@@ -188,285 +188,279 @@ inline void __stdcall addSendPacket() {
 
 CodeCave(StatHook){
     push eax
-        mov eax,
-    [ebp + 0x08] mov[curHP], eax mov eax, [ebp + 0x0C] mov[maxHP], eax mov eax, [ebp + 0x10] mov[curMP], eax mov eax, [ebp + 0x14] mov[maxMP], eax mov eax, [ebp + 0x18] mov[curEXP], eax mov eax, [ebp + 0x1C] mov[maxEXP], eax pop eax lea ecx, [eax + eax * 0x4] cmp ecx, ebx jmp dword ptr[statHookAddrRet]} EndCodeCave
+    mov eax, [ebp + 0x08]
+    mov [curHP], eax
+    mov eax, [ebp + 0x0C]
+    mov [maxHP], eax
+    mov eax, [ebp + 0x10]
+    mov [curMP], eax
+    mov eax, [ebp + 0x14]
+    mov [maxMP], eax
+    mov eax, [ebp + 0x18]
+    mov [curEXP], eax
+    mov eax, [ebp + 0x1C]
+    mov [maxEXP], eax
+    pop eax
+    lea ecx, [eax + eax * 0x4]
+    cmp ecx, ebx
+    jmp dword ptr [statHookAddrRet]
+} EndCodeCave
 
     CodeCave(MapNameHook){
-        mov[mapNameAddr], ecx mov[ebp - 0x28], edi lea ecx, [ebp - 0x14] jmp dword ptr[mapNameHookAddrRet]} EndCodeCave
+        mov [mapNameAddr], ecx
+        mov [ebp - 0x28], edi
+        lea ecx, [ebp - 0x14]
+        jmp dword ptr [mapNameHookAddrRet]
+    } EndCodeCave
 
     CodeCave(ItemVacHook){
         pushad
-            mov ecx,
-        [ebp + 0x8] mov ebx,
-        [ebp - 0x24] mov[ecx],
-        ebx
-            mov[ecx + 0x4],
-        eax
-            mov ecx,
-        eax
-            mov eax,
-        ebx
-            lea edx,
-        [eax - 0x19] mov[ebp - 0x34],
-        edx
-            lea edx,
-        [ecx - 0x32] add eax,
-        0x19 add ecx,
-        0xA mov[ebp - 0x30],
-        edx
-            mov[ebp - 0x2C],
-        eax
-            mov[ebp - 0x28],
-        ecx
-            popad
+        mov ecx, [ebp + 0x8]
+        mov ebx, [ebp - 0x24]
+        mov [ecx], ebx
+        mov [ecx + 0x4], eax
+        mov ecx, eax
+        mov eax, ebx
+        lea edx, [eax - 0x19]
+        mov [ebp - 0x34], edx
+        lea edx, [ecx - 0x32]
+        add eax, 0x19
+        add ecx, 0xA
+        mov [ebp - 0x30], edx
+        mov [ebp - 0x2C], eax
+        mov [ebp - 0x28], ecx
+        popad
 
-                push eax
-                    push dword ptr ss : [ebp - 0x24] lea eax,
-        dword ptr ss : [ebp - 0x34] jmp dword ptr[itemVacAddrRet]
+        push eax
+        push dword ptr ss:[ebp - 0x24]
+        lea eax, dword ptr ss:[ebp - 0x34]
+        jmp dword ptr [itemVacAddrRet]
     } EndCodeCave
 
     CodeCave(MouseFlyXHook){
         push eax
-            push ecx
-                mov eax,
-        [UserLocalBase] mov eax,
-        [eax] mov ecx,
-        [OFS_pID] mov eax,
-        [eax + ecx] cmp esi,
-        eax
-            pop eax
-                jne ReturnX
-                    mov eax,
-        [InputBase] mov eax,
-        [eax] mov ecx,
-        [OFS_MouseLocation] mov eax,
-        [eax + ecx] mov ecx,
-        [OFS_MouseX] mov eax,
-        [eax + ecx]
+        push ecx
+        mov eax, [UserLocalBase]
+        mov eax, [eax]
+        mov ecx, [OFS_pID]
+        mov eax, [eax + ecx]
+        cmp esi, eax
+        pop eax
+        jne ReturnX
+        mov eax, [InputBase]
+        mov eax, [eax]
+        mov ecx, [OFS_MouseLocation]
+        mov eax, [eax + ecx]
+        mov ecx, [OFS_MouseX]
+        mov eax, [eax + ecx]
 
-        ReturnX :
-            pop ecx
-                mov[ebx],
-        eax
-            mov edi,
-        [ebp + 0x10] jmp dword ptr[mouseFlyXAddrRet]
+    ReturnX:
+        pop ecx
+        mov [ebx], eax
+        mov edi, [ebp + 0x10]
+        jmp dword ptr [mouseFlyXAddrRet]
     } EndCodeCave
 
     CodeCave(MouseFlyYHook){
         push eax
-            push ecx
-                mov eax,
-        [UserLocalBase] mov eax,
-        [eax] mov ecx,
-        [OFS_pID] mov eax,
-        [eax + ecx] cmp esi,
-        eax
-            pop eax
-                jne ReturnY
-                    mov eax,
-        [InputBase] mov eax,
-        [eax] mov ecx,
-        [OFS_MouseLocation] mov eax,
-        [eax + ecx] mov ecx,
-        [OFS_MouseY] mov eax,
-        [eax + ecx]
+        push ecx
+        mov eax, [UserLocalBase]
+        mov eax, [eax]
+        mov ecx, [OFS_pID]
+        mov eax, [eax + ecx]
+        cmp esi, eax
+        pop eax
+        jne ReturnY
+        mov eax, [InputBase]
+        mov eax, [eax]
+        mov ecx, [OFS_MouseLocation]
+        mov eax, [eax + ecx]
+        mov ecx, [OFS_MouseY]
+        mov eax, [eax + ecx]
 
-        ReturnY :
-            pop ecx
-                mov[edi],
-        eax
-            mov ebx,
-        [ebp + 0x14] jmp dword ptr[mouseFlyYAddrRet]
+    ReturnY:
+        pop ecx
+        mov [edi], eax
+        mov ebx, [ebp + 0x14]
+        jmp dword ptr [mouseFlyYAddrRet]
     } EndCodeCave
 
     CodeCave(MobFreezeHook){
-        mov[esi + 0x00000248], 0x06 mov eax, [esi + 0x00000248] jmp dword ptr[mobFreezeAddrRet]} EndCodeCave
+        mov [esi + 0x00000248], 0x06
+        mov eax, [esi + 0x00000248]
+        jmp dword ptr [mobFreezeAddrRet]
+    } EndCodeCave
 
     CodeCave(MobAutoAggroHook){
-        call dword ptr[cVecCtrlWorkUpdateActiveCall] // calls CVecCtrl::WorkUpdateActive()
+        call dword ptr [cVecCtrlWorkUpdateActiveCall] // calls CVecCtrl::WorkUpdateActive()
         push eax
-            mov edx,
-        [UserLocalBase] mov edx, [edx] mov eax, [OFS_pID] mov edx, [edx + eax] mov edx, [edx + 0x8] mov eax, [OFS_Aggro] mov[esi + eax], edx // Aggro Offset (first cmp before CVecCtrl::ChaseTarget)
-                                                                                                                                             pop eax jmp dword ptr[mobAutoAggroAddrRet]} EndCodeCave
+        mov edx, [UserLocalBase]
+        mov edx, [edx]
+        mov eax, [OFS_pID]
+        mov edx, [edx + eax]
+        mov edx, [edx + 0x8]
+        mov eax, [OFS_Aggro]
+        mov [esi + eax], edx // Aggro Offset (first cmp before CVecCtrl::ChaseTarget)
+
+        pop eax
+        jmp dword ptr [mobAutoAggroAddrRet]
+    } EndCodeCave
 
     CodeCave(SpawnPointHook){
         push ecx
-            push edx
-                cmp dword ptr[esp + 0x8],
-        0x009BBD5D je Return // If Spawning Mob, skip
-            cmp dword ptr[esp + 0x8],
-        0x009C1D90 je Return           // If Spawning NPC, skip
-            call getSpawnControlStruct // returns SpawnControlStruct* with the mapID == current mapID
-                cmp eax,
-        0 je Return // If end of SpawnControl and no match, skip
-            mov edx,
-        [eax + 4] mov dword ptr[esp + 0x10],
-        edx // x
-            mov edx,
-        [eax + 8] mov dword ptr[esp + 0x14],
-        edx // y
+        push edx
+        cmp dword ptr [esp + 0x8], 0x009BBD5D
+        je Return // If Spawning Mob, skip
+        cmp dword ptr [esp + 0x8], 0x009C1D90
+        je Return // If Spawning NPC, skip
+        call getSpawnControlStruct // returns SpawnControlStruct* with the mapID == current mapID
+        cmp eax, 0
+        je Return // If end of SpawnControl and no match, skip
+        mov edx, [eax + 4]
+        mov dword ptr [esp + 0x10], edx // x
+        mov edx, [eax + 8]
+        mov dword ptr [esp + 0x14], edx // y
 
-        Return :
-            pop edx
-                pop ecx
-                    mov eax,
-        0x00AE56F4 // original code
-        jmp dword ptr[spawnPointAddrRet]
+    Return:
+        pop edx
+        pop ecx
+        mov eax, 0x00AE56F4 // original code
+        jmp dword ptr [spawnPointAddrRet]
     } EndCodeCave
 
     CodeCave(ItemHook){
-        cmp dword ptr[esp],
-        0x005047B8 jne NormalAPICall // If return not in CDropPool::TryPickUpDrop, skip
-            push eax
-                mov eax,
-        [esp + 0x0C] mov[ItemX],
-        eax
-            mov eax,
-        [esp + 0x10] mov[ItemY],
-        eax
-            pop eax
+        cmp dword ptr [esp], 0x005047B8
+        jne NormalAPICall // If return not in CDropPool::TryPickUpDrop, skip
+        push eax
+        mov eax, [esp + 0x0C]
+        mov [ItemX], eax
+        mov eax, [esp + 0x10]
+        mov [ItemY], eax
+        pop eax
 
-        NormalAPICall :
-            jmp dword ptr PtInRect
+    NormalAPICall:
+        jmp dword ptr PtInRect
     } EndCodeCave
 
     CodeCave(ItemFilterHook){
         push ebx
-            cmp byte ptr[isItemLoggingEnabled],
-        0 je Continue // Skip Logging Items
-            push eax
-                mov[itemLogged],
-        eax
-            call itemLog
-                pop eax
-
-        Continue :
-            cmp byte ptr[isItemFilterEnabled],
-        0 je EndItemFilter // Skip if Item Filter is disabled
-            mov ebx,
-        [itemFilterMesos] cmp eax,
-        ebx                 // Assumes item is mesos because there the mesos drop limit is 50,000 whereas the smallest item id is greater than that
-            jle RemoveMesos // Remove mesos if item id is less than or equal to the user set limit.
-                push eax
-                    mov[itemLogged],
-        eax
-            call shouldItemBeFiltered
-                cmp eax,
-        0 // Item shouldn't be filtered
+        cmp byte ptr [isItemLoggingEnabled], 0
+        je Continue // Skip Logging Items
+        push eax
+        mov [itemLogged], eax
+        call itemLog
         pop eax
-            je EndItemFilter
-                mov eax,
-        0x00 // Remove Item
+
+    Continue:
+        cmp byte ptr [isItemFilterEnabled], 0
+        je EndItemFilter // Skip if Item Filter is disabled
+        mov ebx, [itemFilterMesos]
+        cmp eax, ebx                 // Assumes item is mesos because there the mesos drop limit is 50,000 whereas the smallest item id is greater than that
+        jle RemoveMesos // Remove mesos if item id is less than or equal to the user set limit.
+        push eax
+        mov [itemLogged], eax
+        call shouldItemBeFiltered
+        cmp eax, 0 // Item shouldn't be filtered
+        pop eax
+        je EndItemFilter
+        mov eax, 0x00 // Remove Item
         jmp EndItemFilter
 
-        RemoveMesos :
-            mov[edi + 0x30],
-        0x00 // Remove Mesos
+    RemoveMesos:
+        mov [edi + 0x30], 0x00 // Remove Mesos
 
-        EndItemFilter :
-            pop ebx
-                mov[edi + 0x34],
-        eax
-            mov edi,
-        [ebp - 0x14] jmp[itemFilterAddrRet]
+    EndItemFilter:
+        pop ebx
+        mov [edi + 0x34], eax
+        mov edi, [ebp - 0x14]
+        jmp [itemFilterAddrRet]
     } EndCodeCave
 
     CodeCave(MobFilter1Hook){
         push ebx
-            call[cInPacketDecode4Addr] // CInPacket::Decode4()
-        cmp byte ptr[isMobFilterEnabled],
-        0 je EndMobFilter // Skip if Mob Filter is disabled
-            push eax
-                mov[mobLogged],
-        eax
-            call shouldMobBeFiltered
-                cmp eax,
-        0 // Mob shouldn't be filtered
+        call [cInPacketDecode4Addr] // CInPacket::Decode4()
+        cmp byte ptr [isMobFilterEnabled], 0
+        je EndMobFilter // Skip if Mob Filter is disabled
+        push eax
+        mov [mobLogged], eax
+        call shouldMobBeFiltered
+        cmp eax, 0 // Mob shouldn't be filtered
         pop eax
-            je EndMobFilter
-                pop ebx
-                    jmp[mobFilter1JmpAddr]
+        je EndMobFilter
+        pop ebx
+        jmp [mobFilter1JmpAddr]
 
-        EndMobFilter :
-            pop ebx
-                jmp[mobFilter1AddrRet]
+    EndMobFilter:
+        pop ebx
+        jmp [mobFilter1AddrRet]
     } EndCodeCave
 
     CodeCave(MobFilter2Hook){
         push ebx
-            call[cInPacketDecode4Addr] // CInPacket::Decode4()
-        cmp byte ptr[isMobLoggingEnabled],
-        0 je Continue // Skip Logging Mobs
-            push eax
-                mov[mobLogged],
-        eax
-            call mobLog
-                pop eax
-
-        Continue :
-            cmp byte ptr[isMobFilterEnabled],
-        0 je EndMobFilter // Skip if Mob Filter is disabled
-            push eax
-                mov[mobLogged],
-        eax
-            call shouldMobBeFiltered
-                cmp eax,
-        0 // Mob shouldn't be filtered
+        call [cInPacketDecode4Addr] // CInPacket::Decode4()
+        cmp byte ptr [isMobLoggingEnabled], 0
+        je Continue // Skip Logging Mobs
+        push eax
+        mov [mobLogged], eax
+        call mobLog
         pop eax
-            je EndMobFilter
-                pop ebx
-                    jmp[mobFilter2JmpAddr]
 
-        EndMobFilter :
-            pop ebx
-                jmp[mobFilter2AddrRet]
+    Continue:
+        cmp byte ptr [isMobFilterEnabled], 0
+        je EndMobFilter // Skip if Mob Filter is disabled
+        push eax
+        mov [mobLogged], eax
+        call shouldMobBeFiltered
+        cmp eax, 0 // Mob shouldn't be filtered
+        pop eax
+        je EndMobFilter
+        pop ebx
+        jmp [mobFilter2JmpAddr]
+
+    EndMobFilter:
+        pop ebx
+        jmp [mobFilter2AddrRet]
     } EndCodeCave
 
     CodeCave(SendPacketLogHook){
-        mov dword ptr[sendPacketData], esp
-                                           pushad
-                                               call[addSendPacket] popad
-                                                   jmp[cOutPacketAddrRet]} EndCodeCave
+        mov dword ptr [sendPacketData], esp
+        pushad
+        call [addSendPacket]
+        popad
+        jmp [cOutPacketAddrRet]
+    } EndCodeCave
 
     CodeCave(DupeXHook){
         pushfd
-            push eax
-                push ecx
-                    mov eax,
-        [UserLocalBase] mov eax,
-        [eax] test eax,
-        eax
-            je NullPlatform
-                mov ecx,
-        [OFS_pID] mov eax,
-        [eax + ecx] lea ecx,
-        [eax - 0x0c] // account id offset?
-        test ecx,
-        ecx
-            je NullPlatform
-                mov eax,
-        [ecx + 0x00000114] // kb offset?
-        test eax,
-        eax
-            je NullPlatform
-                mov dword ptr[dupeXFoothold],
-        eax
-            cmp esi,
-        ecx
-            je Normal
-                mov edi,
-        [dupeXFoothold] jmp Normal
+        push eax
+        push ecx
+        mov eax, [UserLocalBase]
+        mov eax, [eax]
+        test eax, eax
+        je NullPlatform
+        mov ecx, [OFS_pID]
+        mov eax, [eax + ecx]
+        lea ecx, [eax - 0x0c] // account id offset?
+        test ecx, ecx
+        je NullPlatform
+        mov eax, [ecx + 0x00000114] // kb offset?
+        test eax, eax
+        je NullPlatform
+        mov dword ptr [dupeXFoothold], eax
+        cmp esi, ecx
+        je Normal
+        mov edi, [dupeXFoothold]
+        jmp Normal
 
-        NullPlatform :
-            mov dword ptr[dupeXFoothold],
-        0x00 jmp Normal
+    NullPlatform:
+        mov dword ptr [dupeXFoothold], 0x00
+        jmp Normal
 
-        Normal :
-            pop ecx
-                pop eax
-                    popfd
-                        mov[esi + 0x00000114],
-        edi
-            jmp dword ptr[dupeXAddrRet]
+    Normal:
+        pop ecx
+        pop eax
+        popfd
+        mov [esi + 0x00000114], edi
+        jmp dword ptr [dupeXAddrRet]
     } EndCodeCave
 } // namespace Assembly
