@@ -8,30 +8,6 @@ using namespace Timelapse::Logging;
 static int keyCollection[] = {0x10, 0x11, 0x12, 0x20, 0x2D, 0x2E, 0x24, 0x23, 0x21, 0x22, 0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49, 0x4A, 0x4B, 0x4C, 0x4D, 0x4E, 0x4F, 0x50, 0x51,
                               0x52, 0x53, 0x54, 0x55, 0x56, 0x57, 0x58, 0x59, 0x5A, 0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39};
 
-// Check if keypress is valid
-static bool isKeyValid(Object ^ sender, Windows::Forms::KeyPressEventArgs ^ e, bool isSigned) {
-    bool result = true;
-
-    // If the character is not a digit or backspace, don't allow it
-    if (!isdigit(e->KeyChar) && e->KeyChar != '\b')
-        result = false;
-
-    // If the textbox is supposed to contain a signed value, check to see if '-' should be permitted
-    if (isSigned && e->KeyChar == '-') {
-        Windows::Forms::TextBox ^ textBox = safe_cast<Windows::Forms::TextBox ^>(sender);
-
-        // If the selected text does not start at the beginning of the text, don't allow the '-' keypress
-        if (textBox->SelectionStart > 0)
-            result = false;
-        // If the selection starts at 0 and there exists a '-' in the complete text, and the selected text doesn't have '-', don't allow an additional '-' keypress
-        else if (textBox->Text->IndexOf('-') > -1 && !textBox->SelectedText->Contains("-"))
-            result = false;
-        else
-            result = true;
-    }
-
-    return result;
-}
 #pragma region Auto HP
 void MainForm::cbHP_CheckedChanged(Object ^ sender, EventArgs ^ e) {
     const bool inputsEnabled = !this->cbHP->Checked;

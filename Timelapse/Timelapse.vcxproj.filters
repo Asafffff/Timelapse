@@ -146,6 +146,9 @@
     <ClCompile Include="Application\MainForm.Testing.cpp">
       <Filter>Source Files\Application</Filter>
     </ClCompile>
+    <ClCompile Include="Application\MainForm.Validation.cpp">
+      <Filter>Source Files\Application</Filter>
+    </ClCompile>
     <ClCompile Include="Application\Settings.cpp">
       <Filter>Source Files\Application</Filter>
     </ClCompile>

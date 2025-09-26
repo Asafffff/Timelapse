@@ -147,6 +147,7 @@
     <ClCompile Include="Application\MainForm.MapRusher.cpp" />
     <ClCompile Include="Application\MainForm.Packets.cpp" />
     <ClCompile Include="Application\MainForm.Testing.cpp" />
+    <ClCompile Include="Application\MainForm.Validation.cpp" />
     <ClCompile Include="Application\Settings.cpp" />
     <ClCompile Include="Core\Inventory.cpp" />
     <ClCompile Include="Core\Packet.cpp" />
