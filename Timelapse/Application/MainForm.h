@@ -2954,7 +2954,6 @@ public:
 			this->HPPotDelay->TabIndex = 13;
 			this->HPPotDelay->Text = L"500";
 			this->HPPotDelay->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
-			this->HPPotDelay->TextChanged += gcnew System::EventHandler(this, &MainForm::HPPotDelay_TextChanged);
 			// 
 			// label93
 			// 
@@ -3757,7 +3756,7 @@ public:
 			this->tbAttackDelay->TabIndex = 47;
 			this->tbAttackDelay->Text = L"10";
 			this->tbAttackDelay->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
-			this->tbAttackDelay->TextChanged += gcnew System::EventHandler(this, &MainForm::tbAttackDelay_TextChanged);
+                        this->tbAttackDelay->Leave += gcnew System::EventHandler(this, &MainForm::tbAttackDelay_Leave);
 			// 
 			// label89
 			// 
@@ -4774,7 +4773,7 @@ public:
 			this->tbDupeXFoothold->TabIndex = 16;
 			this->tbDupeXFoothold->Text = L"0";
 			this->tbDupeXFoothold->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
-			this->tbDupeXFoothold->TextChanged += gcnew System::EventHandler(this, &MainForm::tbDupeXFoothold_TextChanged);
+                        this->tbDupeXFoothold->Leave += gcnew System::EventHandler(this, &MainForm::tbDupeXFoothold_Leave);
 			this->tbDupeXFoothold->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MainForm::tbDupeXFoothold_KeyPress);
 			// 
 			// label60
@@ -5266,7 +5265,7 @@ public:
 			this->tbMobFilterSearch->Size = System::Drawing::Size(87, 21);
 			this->tbMobFilterSearch->TabIndex = 27;
 			this->tbMobFilterSearch->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
-			this->tbMobFilterSearch->TextChanged += gcnew System::EventHandler(this, &MainForm::tbMobFilterSearch_TextChanged);
+                        this->tbMobFilterSearch->KeyUp += gcnew System::Windows::Forms::KeyEventHandler(this, &MainForm::tbMobFilterSearch_KeyUp);
 			// 
 			// rbMobFilterBlackList
 			// 
@@ -5439,7 +5438,7 @@ public:
 			this->tbItemFilterSearch->Size = System::Drawing::Size(87, 21);
 			this->tbItemFilterSearch->TabIndex = 27;
 			this->tbItemFilterSearch->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
-			this->tbItemFilterSearch->TextChanged += gcnew System::EventHandler(this, &MainForm::tbItemFilterSearch_TextChanged);
+                        this->tbItemFilterSearch->KeyUp += gcnew System::Windows::Forms::KeyEventHandler(this, &MainForm::tbItemFilterSearch_KeyUp);
 			// 
 			// label74
 			// 
@@ -5499,7 +5498,7 @@ public:
 			this->tbItemFilterMesos->TabIndex = 22;
 			this->tbItemFilterMesos->Text = L"0";
 			this->tbItemFilterMesos->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
-			this->tbItemFilterMesos->TextChanged += gcnew System::EventHandler(this, &MainForm::tbItemFilterMesos_TextChanged);
+                        this->tbItemFilterMesos->Leave += gcnew System::EventHandler(this, &MainForm::tbItemFilterMesos_Leave);
 			this->tbItemFilterMesos->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MainForm::tbItemFilterMesos_KeyPress);
 			// 
 			// label70
@@ -5889,7 +5888,7 @@ public:
 			this->comboInUseSlot->TabIndex = 28;
 			this->comboInUseSlot->Text = L"1";
 			this->comboInUseSlot->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
-			this->comboInUseSlot->TextChanged += gcnew System::EventHandler(this, &MainForm::comboInUseSlot_TextChanged);
+                        this->comboInUseSlot->Leave += gcnew System::EventHandler(this, &MainForm::comboInUseSlot_Leave);
 			// 
 			// lbInUseSlot
 			// 
@@ -6011,7 +6010,6 @@ public:
 			this->tbAPDEX->TabIndex = 10;
 			this->tbAPDEX->Text = L"0";
 			this->tbAPDEX->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
-			this->tbAPDEX->TextChanged += gcnew System::EventHandler(this, &MainForm::tbAPDEX_TextChanged);
 			// 
 			// tbAPLUK
 			// 
@@ -6025,7 +6023,6 @@ public:
 			this->tbAPLUK->TabIndex = 14;
 			this->tbAPLUK->Text = L"0";
 			this->tbAPLUK->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
-			this->tbAPLUK->TextChanged += gcnew System::EventHandler(this, &MainForm::tbAPLUK_TextChanged);
 			// 
 			// tbAPINT
 			// 
@@ -6039,7 +6036,6 @@ public:
 			this->tbAPINT->TabIndex = 17;
 			this->tbAPINT->Text = L"0";
 			this->tbAPINT->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
-			this->tbAPINT->TextChanged += gcnew System::EventHandler(this, &MainForm::tbAPINT_TextChanged);
 			// 
 			// label38
 			// 
@@ -6083,7 +6079,6 @@ public:
 			this->tbAPSTR->TabIndex = 12;
 			this->tbAPSTR->Text = L"0";
 			this->tbAPSTR->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
-			this->tbAPSTR->TextChanged += gcnew System::EventHandler(this, &MainForm::tbAPSTR_TextChanged);
 			// 
 			// label35
 			// 
@@ -6107,7 +6102,6 @@ public:
 			this->tbAPMP->TabIndex = 9;
 			this->tbAPMP->Text = L"0";
 			this->tbAPMP->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
-			this->tbAPMP->TextChanged += gcnew System::EventHandler(this, &MainForm::tbAPMP_TextChanged);
 			// 
 			// label34
 			// 
@@ -6131,7 +6125,6 @@ public:
 			this->tbAPHP->TabIndex = 11;
 			this->tbAPHP->Text = L"0";
 			this->tbAPHP->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
-			this->tbAPHP->TextChanged += gcnew System::EventHandler(this, &MainForm::tbAPHP_TextChanged);
 			// 
 			// label33
 			// 
@@ -6165,7 +6158,6 @@ public:
 			this->tbAPLevel->TabIndex = 6;
 			this->tbAPLevel->Text = L"120";
 			this->tbAPLevel->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
-			this->tbAPLevel->TextChanged += gcnew System::EventHandler(this, &MainForm::tbAPLevel_TextChanged);
 			// 
 			// cbAP
 			// 
@@ -6317,7 +6309,6 @@ public:
 			this->lbMapRusherStatus->TabIndex = 37;
 			this->lbMapRusherStatus->Text = L"Status: Waiting...                                                               "
 				L"                                 \r\n";
-			this->lbMapRusherStatus->TextChanged += gcnew System::EventHandler(this, &MainForm::lbMapRusherStatus_TextChanged);
 			// 
 			// tbMapRusherDestination
 			// 
@@ -6410,7 +6401,7 @@ public:
 			this->tbMapRusherSearch->Size = System::Drawing::Size(134, 21);
 			this->tbMapRusherSearch->TabIndex = 32;
 			this->tbMapRusherSearch->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
-			this->tbMapRusherSearch->TextChanged += gcnew System::EventHandler(this, &MainForm::tbMapRusherSearch_TextChanged);
+                        this->tbMapRusherSearch->KeyUp += gcnew System::Windows::Forms::KeyEventHandler(this, &MainForm::tbMapRusherSearch_KeyUp);
 			// 
 			// label78
 			// 
@@ -6608,10 +6599,8 @@ public:
 	private: System::Void comboMPKey_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void cbAttack_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void comboAttackKey_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e);
-	private: System::Void tbAttackInterval_TextChanged(System::Object^  sender, System::EventArgs^  e);
-	private: System::Void cbLoot_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
-	private: System::Void tbLootInterval_TextChanged(System::Object^  sender, System::EventArgs^  e);
-	private: System::Void comboLootKey_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e);
+        private: System::Void cbLoot_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
+        private: System::Void comboLootKey_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void bBuffAdd_Click(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void bBuffEnableAll_Click(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void bBuffDisableAll_Click(System::Object^  sender, System::EventArgs^  e);
@@ -6743,14 +6732,13 @@ public:
 	private: System::Void cbMobFilterLog_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void bMobSearchLogClear_Click(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void bMobFilterAdd_Click(System::Object^  sender, System::EventArgs^  e);
-	private: System::Void tbMobFilterSearch_TextChanged(System::Object^  sender, System::EventArgs^  e);
-	private: System::Void tbItemFilterSearch_TextChanged(System::Object^  sender, System::EventArgs^  e);
-	private: System::Void tbItemFilterMesos_TextChanged(System::Object^  sender, System::EventArgs^  e);
+        private: System::Void tbMobFilterSearch_KeyUp(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e);
+        private: System::Void tbItemFilterSearch_KeyUp(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e);
+        private: System::Void tbItemFilterMesos_Leave(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void tvMapRusherSearch_MouseDoubleClick(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e);
 	private: System::Void lvMapRusherSearch_MouseDoubleClick(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e);
-	private: System::Void tbMapRusherSearch_TextChanged(System::Object^  sender, System::EventArgs^  e);
+        private: System::Void tbMapRusherSearch_KeyUp(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e);
 	private: System::Void bMapRush_Click(System::Object^  sender, System::EventArgs^  e);
-	private: System::Void lbMapRusherStatus_TextChanged(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void cbNoWalkingFriction_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void cbVacForceRight_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void cbVacJumpRight_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
@@ -6762,7 +6750,7 @@ public:
 	private: System::Void cbUEMI_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void bUEMIGetCurrentLocation_Click(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void cbSellAll_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
-	private: System::Void tbAttackDelay_TextChanged(System::Object^  sender, System::EventArgs^  e);
+        private: System::Void tbAttackDelay_Leave(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void embedMSWindowToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void lbConsoleLog_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e);
 	private: System::Void hideMSWindowToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
@@ -6771,23 +6759,14 @@ public:
 	private: System::Void tAutoAttack_Tick(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void tAutoLoot_Tick(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void bUseRtrnScroll_Click(System::Object^  sender, System::EventArgs^  e);
-	private: System::Void tbAPLevel_TextChanged(System::Object^  sender, System::EventArgs^  e);
-	private: System::Void tbAPHP_TextChanged(System::Object^  sender, System::EventArgs^  e);
-	private: System::Void tbAPMP_TextChanged(System::Object^  sender, System::EventArgs^  e);
-	private: System::Void tbAPSTR_TextChanged(System::Object^  sender, System::EventArgs^  e);
-	private: System::Void tbAPDEX_TextChanged(System::Object^  sender, System::EventArgs^  e);
-	private: System::Void tbAPINT_TextChanged(System::Object^  sender, System::EventArgs^  e);
-	private: System::Void tbAPLUK_TextChanged(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void cbAP_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
-	private: System::Void comboInUseSlot_TextChanged(System::Object^  sender, System::EventArgs^  e);
+        private: System::Void comboInUseSlot_Leave(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void cbDupeX_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void tbDupeXFoothold_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
-	private: System::Void tbDupeXFoothold_TextChanged(System::Object^  sender, System::EventArgs^  e);
+        private: System::Void tbDupeXFoothold_Leave(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void bDupeXGetFoothold_Click(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void pauseMSToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void cbAutoLogin_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void tPacketLog_Tick(System::Object^  sender, System::EventArgs^  e);
-private: System::Void HPPotDelay_TextChanged(System::Object^ sender, System::EventArgs^ e) {
-}
 };
 };

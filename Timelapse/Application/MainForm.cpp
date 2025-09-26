@@ -373,25 +373,33 @@ void MainForm::GUITimer_Tick(Object^  sender, EventArgs^  e) {
 		lbEXP->Text = PointerFuncs::getCharEXP();
 		lbMesos->Text = PointerFuncs::getCharMesos().ToString("N0");
 
-		lbWorld->Text = PointerFuncs::getWorld();
-		lbChannel->Text = PointerFuncs::getChannel();
-		lbMapID->Text = PointerFuncs::getMapID();
-		lbWalls->Text = PointerFuncs::getMapLeftWall() + " " + PointerFuncs::getMapRightWall() + " " + PointerFuncs::getMapTopWall() + " " + PointerFuncs::getMapBottomWall();
-		
-		lbCharFoothold->Text = PointerFuncs::getCharFoothold();
-		lbCharAnimation->Text = PointerFuncs::getCharAnimation();
-		lbCharPos->Text = PointerFuncs::getCharPos();
-		lbMousePos->Text = PointerFuncs::getMousePos();
+                lbWorld->Text = PointerFuncs::getWorld();
+                lbChannel->Text = PointerFuncs::getChannel().ToString();
+                lbMapID->Text = PointerFuncs::getMapID().ToString();
+                lbWalls->Text = System::String::Format("{0} {1} {2} {3}",
+                        PointerFuncs::getMapLeftWall(),
+                        PointerFuncs::getMapRightWall(),
+                        PointerFuncs::getMapTopWall(),
+                        PointerFuncs::getMapBottomWall());
 
-		lbAttackCount->Text = PointerFuncs::getAttackCount();
-		lbBuffCount->Text = PointerFuncs::getBuffCount();
-		lbBreathCount->Text = PointerFuncs::getBreathCount();
-		lbPeopleCount->Text = PointerFuncs::getPeopleCount();
-		lbMobCount->Text = PointerFuncs::getMobCount();
-		lbItemCount->Text = PointerFuncs::getItemCount();
-		lbPortalCount->Text = PointerFuncs::getPortalCount();
-		lbNPCCount->Text = PointerFuncs::getNPCCount();
-	}
+                lbCharFoothold->Text = PointerFuncs::getCharFoothold().ToString();
+                lbCharAnimation->Text = PointerFuncs::getCharAnimation().ToString();
+
+                System::Drawing::Point charPos = PointerFuncs::getCharPos();
+                lbCharPos->Text = "(" + charPos.X.ToString() + ", " + charPos.Y.ToString() + ")";
+
+                System::Drawing::Point mousePos = PointerFuncs::getMousePos();
+                lbMousePos->Text = "(" + mousePos.X.ToString() + ", " + mousePos.Y.ToString() + ")";
+
+                lbAttackCount->Text = PointerFuncs::getAttackCount().ToString();
+                lbBuffCount->Text = PointerFuncs::getBuffCount().ToString();
+                lbBreathCount->Text = PointerFuncs::getBreathCount().ToString();
+                lbPeopleCount->Text = PointerFuncs::getPeopleCount().ToString();
+                lbMobCount->Text = PointerFuncs::getMobCount().ToString();
+                lbItemCount->Text = PointerFuncs::getItemCount().ToString();
+                lbPortalCount->Text = PointerFuncs::getPortalCount().ToString();
+                lbNPCCount->Text = PointerFuncs::getNPCCount().ToString();
+        }
 }
 #pragma endregion
 
@@ -453,11 +461,13 @@ void SendLoginPacket(String^ username, String^ password) {
 }
 
 void SendCharListRequestPacket(int world, int channel) {
-	String^ packet = "";
-	writeBytes(packet, gcnew array<BYTE>{0x05, 0x00}); //Character List Request OpCode
-	writeByte(packet, 0x02); //Unknown byte
-	writeByte(packet, world); //World
-	writeByte(packet, channel); //Channel
+        if (channel <= 0) return;
+        String^ packet = "";
+        writeBytes(packet, gcnew array<BYTE>{0x05, 0x00}); //Character List Request OpCode
+        writeByte(packet, 0x02); //Unknown byte
+        writeByte(packet, world); //World
+        // UI selections are 1-based; adjust to the server's zero-based channel index.
+        writeByte(packet, channel - 1); //Channel
 	writeBytes(packet, gcnew array<BYTE>{0x7F, 0x00, 0x00, 0x01}); //Unknown bytes
 	SendPacket(packet);
 }
@@ -494,9 +504,9 @@ void AutoLogin() {
 		SendLoginPacket(usernameStr, passwordStr);
 		Sleep(2000);
 
-		int world = MainForm::TheInstance->comboAutoLoginWorld->SelectedIndex;
-		int channel = MainForm::TheInstance->comboAutoLoginChannel->SelectedIndex; 
-		SendCharListRequestPacket(world, channel);
+			int world = MainForm::TheInstance->comboAutoLoginWorld->SelectedIndex;
+			int channel = MainForm::TheInstance->comboAutoLoginChannel->SelectedIndex + 1;
+			SendCharListRequestPacket(world, channel);
 		Sleep(2000);
 
 		int character = MainForm::TheInstance->comboAutoLoginCharacter->SelectedIndex + 1;
@@ -574,12 +584,21 @@ static bool isKeyValid(Object^ sender, Windows::Forms::KeyPressEventArgs^ e, boo
 }
 #pragma region Auto HP
 void MainForm::cbHP_CheckedChanged(Object^  sender, EventArgs^  e) {
-	if (this->cbHP->Checked) {
-		if (GlobalRefs::macroHP == nullptr)
-			GlobalRefs::macroHP = gcnew Macro(keyCollection[this->comboHPKey->SelectedIndex], Convert::ToUInt32(HPPotDelay->Text), MacroType::HPPOTMACRO);
-		GlobalRefs::macroHP->Toggle(true);
-		MacrosEnabled::bMacroHP = true;
-	}
+        const bool inputsEnabled = !this->cbHP->Checked;
+        this->tbHP->Enabled = inputsEnabled;
+        this->HPPotDelay->Enabled = inputsEnabled;
+
+        if (this->cbHP->Checked) {
+                if (String::IsNullOrWhiteSpace(tbHP->Text) || String::IsNullOrWhiteSpace(HPPotDelay->Text)) {
+                        MessageBox::Show("Error: HP Pot textboxes cannot be empty");
+                        this->cbHP->Checked = false;
+                        return;
+                }
+                if (GlobalRefs::macroHP == nullptr)
+                        GlobalRefs::macroHP = gcnew Macro(keyCollection[this->comboHPKey->SelectedIndex], Convert::ToUInt32(HPPotDelay->Text), MacroType::HPPOTMACRO);
+                GlobalRefs::macroHP->Toggle(true);
+                MacrosEnabled::bMacroHP = true;
+        }
 	else {
 		GlobalRefs::macroHP->Toggle(false);
 		MacrosEnabled::bMacroHP = false;
@@ -598,12 +617,21 @@ void MainForm::tbHP_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^
 
 #pragma region Auto MP
 void MainForm::cbMP_CheckedChanged(Object^  sender, EventArgs^  e) {
-	if (this->cbMP->Checked) {
-		if (GlobalRefs::macroMP == nullptr){}
-			GlobalRefs::macroMP = gcnew Macro(keyCollection[this->comboMPKey->SelectedIndex], Convert::ToUInt32(MPPotDelay->Text), MacroType::MPPOTMACRO);
-		GlobalRefs::macroMP->Toggle(true);
-		MacrosEnabled::bMacroMP = true;
-	}
+        const bool inputsEnabled = !this->cbMP->Checked;
+        this->tbMP->Enabled = inputsEnabled;
+        this->MPPotDelay->Enabled = inputsEnabled;
+
+        if (this->cbMP->Checked) {
+                if (String::IsNullOrWhiteSpace(tbMP->Text) || String::IsNullOrWhiteSpace(MPPotDelay->Text)) {
+                        MessageBox::Show("Error: MP Pot textboxes cannot be empty");
+                        this->cbMP->Checked = false;
+                        return;
+                }
+                if (GlobalRefs::macroMP == nullptr){}
+                        GlobalRefs::macroMP = gcnew Macro(keyCollection[this->comboMPKey->SelectedIndex], Convert::ToUInt32(MPPotDelay->Text), MacroType::MPPOTMACRO);
+                GlobalRefs::macroMP->Toggle(true);
+                MacrosEnabled::bMacroMP = true;
+        }
 	else {
 		GlobalRefs::macroMP->Toggle(false);
 		MacrosEnabled::bMacroMP = false;
@@ -622,18 +650,20 @@ void MainForm::tbMP_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^
 
 #pragma region Auto Attack
 void MainForm::cbAttack_CheckedChanged(Object^  sender, EventArgs^  e) {
-	if(this->cbAttack->Checked) {
-		if(GlobalRefs::macroAttack == nullptr) {
-			if (String::IsNullOrWhiteSpace(tbAttackInterval->Text)) {
-				MessageBox::Show("Error: Attack Interval textbox cannot be empty");
-				this->cbAttack->Checked = false;
-				return;
-			}
-		}
-		this->tAutoAttack->Interval = Convert::ToInt32(tbAttackInterval->Text);
-		this->tAutoAttack->Enabled = true; //cbAttack->Checked
-		MacrosEnabled::bMacroAttack = true;
-	}
+        const bool inputsEnabled = !this->cbAttack->Checked;
+        this->tbAttackInterval->Enabled = inputsEnabled;
+        this->tbAttackMob->Enabled = inputsEnabled;
+
+        if(this->cbAttack->Checked) {
+                if (String::IsNullOrWhiteSpace(tbAttackInterval->Text)) {
+                        MessageBox::Show("Error: Attack Interval textbox cannot be empty");
+                        this->cbAttack->Checked = false;
+                        return;
+                }
+                this->tAutoAttack->Interval = Convert::ToInt32(tbAttackInterval->Text);
+                this->tAutoAttack->Enabled = true; //cbAttack->Checked
+                MacrosEnabled::bMacroAttack = true;
+        }
 	else {
 		this->tAutoAttack->Enabled = false;
 		MacrosEnabled::bMacroAttack = false;
@@ -661,6 +691,7 @@ void MainForm::tbAttackInterval_TextChanged(Object^  sender, EventArgs^  e) {
 }
 
 void MainForm::tbAttackMobCount_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^  e) {
+
 	if (!isKeyValid(sender, e, false)) e->Handled = true; //If key is not valid, do nothing and indicate that it has been handled
 }
 
@@ -672,18 +703,20 @@ void MainForm::comboAttackKey_SelectedIndexChanged(Object^  sender, EventArgs^  
 
 #pragma region Auto Loot
 void MainForm::cbLoot_CheckedChanged(Object^  sender, EventArgs^  e) {
-	if (this->cbLoot->Checked) {
-		if (GlobalRefs::macroLoot == nullptr) {
-			if (String::IsNullOrWhiteSpace(tbLootInterval->Text)) {
-				MessageBox::Show("Error: Loot Interval textbox cannot be empty");
-				this->cbLoot->Checked = false;
-				return;
-			}
-		}
-		this->tAutoLoot->Interval = Convert::ToInt32(tbAttackInterval->Text);
-		this->tAutoLoot->Enabled = true; //cbLoot->Checked
-		MacrosEnabled::bMacroLoot = true;
-	}
+        const bool inputsEnabled = !this->cbLoot->Checked;
+        this->tbLootInterval->Enabled = inputsEnabled;
+        this->tbLootItem->Enabled = inputsEnabled;
+
+        if (this->cbLoot->Checked) {
+                if (String::IsNullOrWhiteSpace(tbLootInterval->Text)) {
+                        MessageBox::Show("Error: Loot Interval textbox cannot be empty");
+                        this->cbLoot->Checked = false;
+                        return;
+                }
+                this->tAutoLoot->Interval = Convert::ToInt32(tbLootInterval->Text);
+                this->tAutoLoot->Enabled = true; //cbLoot->Checked
+                MacrosEnabled::bMacroLoot = true;
+        }
 	else {
 		this->tAutoLoot->Enabled = false; 
 		MacrosEnabled::bMacroLoot = false;
@@ -711,6 +744,7 @@ void MainForm::tbLootInterval_TextChanged(Object^  sender, EventArgs^  e) {
 }
 
 void MainForm::tbLootItemCount_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^  e) {
+
 	if (!isKeyValid(sender, e, false)) e->Handled = true; //If key is not valid, do nothing and indicate that it has been handled
 }
 
@@ -778,7 +812,7 @@ void MainForm::tbBuffInterval_KeyPress(Object^  sender, Windows::Forms::KeyPress
 //TODO: add option to whitelist or blacklist channels
 
 void CallCSFunc() {
-	if (PointerFuncs::getMapID()->Equals("0")) return;
+        if (PointerFuncs::getMapID() == 0) return;
 	WritePointer(UserLocalBase, OFS_Breath, 0);
 	CWvsContext__SendMigrateToShopRequest(*(PVOID*)ServerBase, (PVOID)0x2FDFE1D, 0);
 	Sleep(Convert::ToUInt32(MainForm::TheInstance->tbCSDelay->Text));
@@ -788,23 +822,36 @@ void CallCSFunc() {
 
 void _stdcall AutoCC(int toChannel) {
 	int channel;
+	int channelCount = MainForm::TheInstance->comboChannelKey->Items->Count;
 	//List<int> excludedChannels = {};
-	// read string from settings	
+	// read string from settings
 	//String excludedChannelsText = MainForm::TheInstance->tbCSDelay->Text;
 	//int i;
 	//for (i=0, i<sizeof(excludedChannelsText), i++)
 	// parse string by comma into excludedChanList
 	//String firstchar = excludedChannelsText[1];
 
-	if (toChannel == -1) channel = rand() % 19;
+	if (toChannel == -1) {
+		if (channelCount <= 0) return;
+		channel = (rand() % channelCount) + 1;
+	}
 	else channel = toChannel;
 
-	if (MainForm::TheInstance->rbPacket->Checked)
-		SendPacket(gcnew String("27 00 " + channel.ToString("X2") + " ** ** ** 00")); //Send Auto CC Packet
-	else
-		Hooks::ChangeChannel(channel); //CallCCFunc(channel); //Call Auto CC Function
+        if (MainForm::TheInstance->rbPacket->Checked) {
+                String^ packet = "";
+                writeBytes(packet, gcnew array<BYTE>{0x27, 0x00}); // Auto CC opcode
+                writeByte(packet, (BYTE)channel); // Target channel
+                writeByte(packet, (BYTE)(rand() % 0x100));
+                writeByte(packet, (BYTE)(rand() % 0x100));
+                writeByte(packet, (BYTE)(rand() % 0x100));
+                writeByte(packet, 0); // Unknown
+                SendPacket(packet); //Send Auto CC Packet
+        }
+        else
+                Hooks::ChangeChannel(channel); //CallCCFunc(channel); //Call Auto CC Function
 
-	Sleep(200); 
+
+	Sleep(200);
 }
 
 void _stdcall AutoCS() {
@@ -813,9 +860,17 @@ void _stdcall AutoCS() {
 			MessageBox::Show("Error: CS Delay textbox cannot be empty");
 			return;
 		}
-		SendPacket(gcnew String("28 00 ** ** ** 00")); //Send go to CS packet
-		Sleep(Convert::ToUInt32(MainForm::TheInstance->tbCSDelay->Text));
-		SendPacket(gcnew String("26 00")); //Send transfer back to field packet
+                String^ packet = "";
+                writeBytes(packet, gcnew array<BYTE>{0x28, 0x00}); // Go to Cash Shop opcode
+                writeByte(packet, (BYTE)(rand() % 0x100));
+                writeByte(packet, (BYTE)(rand() % 0x100));
+                writeByte(packet, (BYTE)(rand() % 0x100));
+                writeByte(packet, 0); // Unknown
+                SendPacket(packet); //Send go to CS packet
+                Sleep(Convert::ToUInt32(MainForm::TheInstance->tbCSDelay->Text));
+                packet = "";
+                writeBytes(packet, gcnew array<BYTE>{0x26, 0x00}); // Transfer back to field opcode
+                SendPacket(packet); //Send transfer back to field packet
 		Sleep(500);
 	}
 	else 
@@ -880,7 +935,7 @@ void MainForm::bCC_Click(Object^  sender, EventArgs^  e) {
 	if (!GlobalRefs::isMapRushing && !GlobalRefs::isChangingField) {
 		GlobalRefs::isChangingField = true;
 		WritePointer(UserLocalBase, OFS_Breath, 0);
-		AutoCC(this->comboChannelKey->SelectedIndex);
+		AutoCC(this->comboChannelKey->SelectedIndex + 1);
 		GlobalRefs::isChangingField = false;
 	}
 }
@@ -986,39 +1041,55 @@ void MainForm::cbBlinkGodmode_CheckedChanged(Object^  sender, EventArgs^  e) {
 }
 
 void ClickTeleport() {
-	while (GlobalRefs::bClickTeleport) {
-		if (ReadPointer(InputBase, OFS_MouseAnimation) == 12)
-			Teleport(ReadMultiPointerSigned(InputBase, 2, OFS_MouseLocation, OFS_MouseX), ReadMultiPointerSigned(InputBase, 2, OFS_MouseLocation, OFS_MouseY));
-		Sleep(Convert::ToUInt32(MainForm::TheInstance->tbClickTeleport->Text));
-	}
-	ExitThread(0);
+        while (GlobalRefs::bClickTeleport) {
+                if (ReadPointer(InputBase, OFS_MouseAnimation) == 12)
+                        Teleport(ReadMultiPointerSigned(InputBase, 2, OFS_MouseLocation, OFS_MouseX), ReadMultiPointerSigned(InputBase, 2, OFS_MouseLocation, OFS_MouseY));
+                System::UInt32 delay;
+                if (!System::UInt32::TryParse(MainForm::TheInstance->tbClickTeleport->Text, delay))
+                        delay = 100; //Fallback to default delay if textbox is empty or invalid
+                Sleep(delay);
+        }
+        ExitThread(0);
 }
 
 void MouseTeleport() {
-	while (GlobalRefs::bMouseTeleport) {
-		if (ReadPointer(InputBase, OFS_MouseAnimation) == 00)
-			Teleport(ReadMultiPointerSigned(InputBase, 2, OFS_MouseLocation, OFS_MouseX), ReadMultiPointerSigned(InputBase, 2, OFS_MouseLocation, OFS_MouseY));
-		Sleep(Convert::ToUInt32(MainForm::TheInstance->tbMouseTeleport->Text));
-	}
-	ExitThread(0);
+        while (GlobalRefs::bMouseTeleport) {
+                if (ReadPointer(InputBase, OFS_MouseAnimation) == 00)
+                        Teleport(ReadMultiPointerSigned(InputBase, 2, OFS_MouseLocation, OFS_MouseX), ReadMultiPointerSigned(InputBase, 2, OFS_MouseLocation, OFS_MouseY));
+                System::UInt32 delay;
+                if (!System::UInt32::TryParse(MainForm::TheInstance->tbMouseTeleport->Text, delay))
+                        delay = 100; //Fallback to default delay if textbox is empty or invalid
+                Sleep(delay);
+        }
+        ExitThread(0);
 }
 
 void MainForm::cbClickTeleport_CheckedChanged(Object^  sender, EventArgs^  e) {
-	if (this->cbClickTeleport->Checked) {
-		GlobalRefs::bClickTeleport = true;
-		NewThread(ClickTeleport);
-	}
-	else
-		GlobalRefs::bClickTeleport = false;
+        if (this->cbClickTeleport->Checked) {
+                if (String::IsNullOrWhiteSpace(this->tbClickTeleport->Text)) {
+                        MessageBox::Show("Error: Click Teleport delay textbox cannot be empty");
+                        this->cbClickTeleport->Checked = false;
+                        return;
+                }
+                GlobalRefs::bClickTeleport = true;
+                NewThread(ClickTeleport);
+        }
+        else
+                GlobalRefs::bClickTeleport = false;
 }
- 
+
 void MainForm::cbMouseTeleport_CheckedChanged(Object^  sender, EventArgs^  e) {
-	if (this->cbMouseTeleport->Checked) {
-		GlobalRefs::bMouseTeleport = true;
-		NewThread(MouseTeleport);
-	}
-	else
-		GlobalRefs::bMouseTeleport = false;
+        if (this->cbMouseTeleport->Checked) {
+                if (String::IsNullOrWhiteSpace(this->tbMouseTeleport->Text)) {
+                        MessageBox::Show("Error: Mouse Teleport delay textbox cannot be empty");
+                        this->cbMouseTeleport->Checked = false;
+                        return;
+                }
+                GlobalRefs::bMouseTeleport = true;
+                NewThread(MouseTeleport);
+        }
+        else
+                GlobalRefs::bMouseTeleport = false;
 }
 
 void MainForm::tbClickTeleport_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^  e) {
@@ -1125,22 +1196,25 @@ void MainForm::tbAttackDelay_KeyPress(Object^  sender, Windows::Forms::KeyPressE
 	if (!isKeyValid(sender, e, false)) e->Handled = true; //If key is not valid, do nothing and indicate that it has been handled
 }
 
-void MainForm::tbAttackDelay_TextChanged(Object^ sender, EventArgs^ e) {
-	String^ animDelayStr = tbAttackDelay->Text;
-	if (String::IsNullOrWhiteSpace(animDelayStr)) {
-		MessageBox::Show("Error: Attack delay textbox cannot be empty");
-		return;
-	}
+void MainForm::tbAttackDelay_Leave(Object^ sender, EventArgs^ e) {
+        String^ animDelayStr = tbAttackDelay->Text;
+        if (String::IsNullOrWhiteSpace(animDelayStr)) {
+                MessageBox::Show("Error: Attack delay textbox cannot be empty");
+                tbAttackDelay->Text = "0";
+                Assembly::animDelay = 0;
+                return;
+        }
 
-	const int animDelayInt = Convert::ToInt32(animDelayStr);
-	if (animDelayInt < -128) {
-		tbAttackDelay->Text = "-128";
-		Assembly::animDelay = -128;
-	} else if (animDelayInt > 127) {
-		tbAttackDelay->Text = "127";
-		Assembly::animDelay = 127;
-	}
-	Assembly::animDelay = animDelayInt;
+        int animDelayInt = Convert::ToInt32(animDelayStr);
+        if (animDelayInt < -128) {
+                animDelayInt = -128;
+        }
+        else if (animDelayInt > 127) {
+                animDelayInt = 127;
+        }
+
+        tbAttackDelay->Text = animDelayInt.ToString();
+        Assembly::animDelay = animDelayInt;
 }
 
 //TODO: the value is a byte thus should be settable in range of -128_127
@@ -1310,23 +1384,26 @@ void MainForm::cbNoWalkingFriction_CheckedChanged(System::Object^  sender, Syste
 #pragma region Hacks II Tab
 #pragma region Teleport
 void TeleportLoop() {
-	int index = 0;
-	while (GlobalRefs::bTeleport) {
-		if (index < MainForm::TheInstance->lvTeleport->Items->Count) {
-			Teleport(Convert::ToInt32(MainForm::TheInstance->lvTeleport->Items[index]->Text), Convert::ToInt32(MainForm::TheInstance->lvTeleport->Items[index]->SubItems[1]->Text));
-			index++;
-		}
-		else
-			index = 0;
+        int index = 0;
+        while (GlobalRefs::bTeleport) {
+                if (index < MainForm::TheInstance->lvTeleport->Items->Count) {
+                        Teleport(Convert::ToInt32(MainForm::TheInstance->lvTeleport->Items[index]->Text), Convert::ToInt32(MainForm::TheInstance->lvTeleport->Items[index]->SubItems[1]->Text));
+                        index++;
+                }
+                else
+                        index = 0;
 
-		Sleep(Convert::ToUInt32(MainForm::TheInstance->tbTeleportLoopDelay->Text));
-	}
-	ExitThread(0);
+                System::UInt32 delay;
+                if (!System::UInt32::TryParse(MainForm::TheInstance->tbTeleportLoopDelay->Text, delay))
+                        delay = 250; //Fallback to default delay if textbox is empty or invalid
+                Sleep(delay);
+        }
+        ExitThread(0);
 }
 
 void MainForm::bTeleportGetCurrentLocation_Click(Object^  sender, EventArgs^  e) {
-	tbTeleportX->Text = PointerFuncs::getCharPosX();
-	tbTeleportY->Text = PointerFuncs::getCharPosY();
+        tbTeleportX->Text = PointerFuncs::getCharPosX().ToString();
+        tbTeleportY->Text = PointerFuncs::getCharPosY().ToString();
 }
 
 void MainForm::bTeleportAdd_Click(Object^  sender, EventArgs^  e) {
@@ -1356,12 +1433,16 @@ void MainForm::lvTeleport_MouseDoubleClick(Object^  sender, Windows::Forms::Mous
 }
 
 void MainForm::bTeleportLoop_Click(Object^  sender, EventArgs^  e) {
-	if (!bTeleportLoop->Text->Equals("Stop Loop")) {
-		bTeleportLoop->Text = "Stop Loop";
-		bTeleportGetCurrentLocation->Enabled = false;
-		bTeleportAdd->Enabled = false;
-		bTeleportDelete->Enabled = false;
-		bTeleport->Enabled = false;
+        if (!bTeleportLoop->Text->Equals("Stop Loop")) {
+                if (String::IsNullOrWhiteSpace(tbTeleportLoopDelay->Text)) {
+                        MessageBox::Show("Error: Teleport Loop delay textbox cannot be empty");
+                        return;
+                }
+                bTeleportLoop->Text = "Stop Loop";
+                bTeleportGetCurrentLocation->Enabled = false;
+                bTeleportAdd->Enabled = false;
+                bTeleportDelete->Enabled = false;
+                bTeleport->Enabled = false;
 		lvTeleport->Enabled = false;
 		GlobalRefs::bTeleport = true;
 		NewThread(TeleportLoop);
@@ -1392,9 +1473,9 @@ void MainForm::tbTeleportLoopDelay_KeyPress(Object^  sender, Windows::Forms::Key
 
 #pragma region Spawn Control
 void MainForm::bSpawnControlGetCurrentLocation_Click(Object^  sender, EventArgs^  e) {
-	tbSpawnControlX->Text = PointerFuncs::getCharPosX();
-	tbSpawnControlY->Text = PointerFuncs::getCharPosY();
-	tbSpawnControlMapID->Text = PointerFuncs::getMapID();
+        tbSpawnControlX->Text = PointerFuncs::getCharPosX().ToString();
+        tbSpawnControlY->Text = PointerFuncs::getCharPosY().ToString();
+        tbSpawnControlMapID->Text = PointerFuncs::getMapID().ToString();
 }
 
 void MainForm::bSpawnControlAdd_Click(Object^  sender, EventArgs^  e) {
@@ -1622,8 +1703,8 @@ void MainForm::cbWallVac_CheckedChanged(System::Object^  sender, System::EventAr
 }
 
 void MainForm::bWallVacGetCurrentLocation_Click(System::Object^  sender, System::EventArgs^  e) {
-	tbWallVacX->Text = PointerFuncs::getCharPosX();
-	tbWallVacY->Text = PointerFuncs::getCharPosY();
+        tbWallVacX->Text = PointerFuncs::getCharPosX().ToString();
+        tbWallVacY->Text = PointerFuncs::getCharPosY().ToString();
 }
 
 void MainForm::tbWallVacX_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^  e) {
@@ -1719,8 +1800,9 @@ void MainForm::bDupeXGetFoothold_Click(System::Object^  sender, System::EventArg
 	tbDupeXFoothold->Text = Convert::ToString(ReadMultiPointerSigned(UserLocalBase, 2, OFS_pID, OFS_Foothold)); 
 }
 
-void MainForm::tbDupeXFoothold_TextChanged(System::Object^  sender, System::EventArgs^  e) {
-	if (tbDupeXFoothold->Text != "") Assembly::dupeXFoothold = Convert::ToInt32(tbDupeXFoothold->Text); 
+void MainForm::tbDupeXFoothold_Leave(System::Object^  sender, System::EventArgs^  e) {
+        if (!String::IsNullOrWhiteSpace(tbDupeXFoothold->Text))
+                Assembly::dupeXFoothold = Convert::ToInt32(tbDupeXFoothold->Text);
 }
 
 void MainForm::tbDupeXFoothold_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e) {
@@ -1772,8 +1854,8 @@ void MainForm::cbUEMI_CheckedChanged(System::Object^  sender, System::EventArgs^
 }
 
 void MainForm::bUEMIGetCurrentLocation_Click(System::Object^  sender, System::EventArgs^  e) {
-	tbUEMIx->Text = PointerFuncs::getCharPosX();
-	tbUEMIy->Text = PointerFuncs::getCharPosY();
+        tbUEMIx->Text = PointerFuncs::getCharPosX().ToString();
+        tbUEMIy->Text = PointerFuncs::getCharPosY().ToString();
 }
 #pragma endregion
 
@@ -1967,18 +2049,24 @@ void MainForm::bItemSearchLogClear_Click(System::Object^  sender, System::EventA
 }
 
 //Find items in ItemsList resource with names starting with text entered so far
-void MainForm::tbItemFilterSearch_TextChanged(System::Object^  sender, System::EventArgs^  e) {
-	lbItemSearchLog->Items->Clear();
-	findItemsStartingWithStr(tbItemFilterSearch->Text);
+void MainForm::tbItemFilterSearch_KeyUp(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
+        lbItemSearchLog->Items->Clear();
+        findItemsStartingWithStr(tbItemFilterSearch->Text);
 }
 
 //Changes limit for Mesos (Range: 0<=limit<=50000)
-void MainForm::tbItemFilterMesos_TextChanged(System::Object^  sender, System::EventArgs^  e) {
-	if (!String::IsNullOrEmpty(tbItemFilterMesos->Text)) {
-		ULONG mesosLimit = Convert::ToUInt32(tbItemFilterMesos->Text);
-		if (mesosLimit >= 0 && mesosLimit <= 50000)
-			Assembly::itemFilterMesos = mesosLimit;
-	}
+void MainForm::tbItemFilterMesos_Leave(System::Object^  sender, System::EventArgs^  e) {
+        if (String::IsNullOrWhiteSpace(tbItemFilterMesos->Text)) {
+                tbItemFilterMesos->Text = Assembly::itemFilterMesos.ToString();
+                return;
+        }
+
+        ULONG mesosLimit = Convert::ToUInt32(tbItemFilterMesos->Text);
+        if (mesosLimit > 50000)
+                mesosLimit = 50000;
+
+        Assembly::itemFilterMesos = mesosLimit;
+        tbItemFilterMesos->Text = mesosLimit.ToString();
 }
 
 void MainForm::tbItemFilterID_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^  e) {
@@ -2120,9 +2208,9 @@ void MainForm::bMobSearchLogClear_Click(System::Object^  sender, System::EventAr
 }
 
 //Searches MobList resource for mobs starting with text entered so far
-void MainForm::tbMobFilterSearch_TextChanged(System::Object^  sender, System::EventArgs^  e) {
-	lbMobSearchLog->Items->Clear();
-	findMobsStartingWithStr(tbMobFilterSearch->Text);
+void MainForm::tbMobFilterSearch_KeyUp(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
+        lbMobSearchLog->Items->Clear();
+        findMobsStartingWithStr(tbMobFilterSearch->Text);
 }
 
 void MainForm::tbMobFilterID_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^  e) {
@@ -2201,10 +2289,9 @@ void MainForm::comboToTown_SelectedIndexChanged(System::Object^  sender, System:
 	}	
 }
 
-void MainForm::comboInUseSlot_TextChanged(System::Object^  sender, System::EventArgs^  e) {
-	if (String::IsNullOrWhiteSpace(comboInUseSlot->Text)) return;
-	const int useSlot = Convert::ToInt32(comboInUseSlot->Text);
-	useSlotG = useSlot;
+void MainForm::comboInUseSlot_Leave(System::Object^  sender, System::EventArgs^  e) {
+        if (String::IsNullOrWhiteSpace(comboInUseSlot->Text)) return;
+        useSlotG = Convert::ToInt32(comboInUseSlot->Text);
 }
 
 String^ CreateRtrnScrollPacket(int scrollId, int useSlot) {
@@ -2282,43 +2369,29 @@ void MainForm::bSendRestore127Health_Click(System::Object^  sender, System::Even
 void MainForm::tbAPLevel_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^  e) {
 	if (!isKeyValid(sender, e, false)) e->Handled = true; //If key is not valid, do nothing and indicate that it has been handled
 }
-void MainForm::tbAPLevel_TextChanged(System::Object^ sender, System::EventArgs^ e){
-}
 
 void MainForm::tbAPHP_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^  e) {
 	if (!isKeyValid(sender, e, false)) e->Handled = true; //If key is not valid, do nothing and indicate that it has been handled
-}
-void MainForm::tbAPHP_TextChanged(System::Object^ sender, System::EventArgs^ e) {
 }
 
 void MainForm::tbAPMP_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^  e) {
 	if (!isKeyValid(sender, e, false)) e->Handled = true; //If key is not valid, do nothing and indicate that it has been handled
 }
-void MainForm::tbAPMP_TextChanged(System::Object^ sender, System::EventArgs^ e) {
-}
 
 void MainForm::tbAPSTR_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^  e) {
 	if (!isKeyValid(sender, e, false)) e->Handled = true; //If key is not valid, do nothing and indicate that it has been handled
-}
-void MainForm::tbAPSTR_TextChanged(System::Object^ sender, System::EventArgs^ e) {
 }
 
 void MainForm::tbAPDEX_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^  e) {
 	if (!isKeyValid(sender, e, false)) e->Handled = true; //If key is not valid, do nothing and indicate that it has been handled
 }
-void MainForm::tbAPDEX_TextChanged(System::Object^ sender, System::EventArgs^ e) {
-}
 
 void MainForm::tbAPINT_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^  e) {
 	if (!isKeyValid(sender, e, false)) e->Handled = true; //If key is not valid, do nothing and indicate that it has been handled
 }
-void MainForm::tbAPINT_TextChanged(System::Object^ sender, System::EventArgs^ e) {
-}
 
 void MainForm::tbAPLUK_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^  e) {
 	if (!isKeyValid(sender, e, false)) e->Handled = true; //If key is not valid, do nothing and indicate that it has been handled
-}
-void MainForm::tbAPLUK_TextChanged(System::Object^ sender, System::EventArgs^ e) {
 }
 
 System::Void MainForm::cbAP_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
@@ -2730,7 +2803,7 @@ static void mapRush(int destMapID) {
 	int remainingMapCount = mapPath->size(), delay = Convert::ToInt32(MainForm::TheInstance->tbMapRusherDelay->Text);
 	if (delay <= 0 || delay > 999999) delay = 500;
 	toggleFastMapRushHacks(true); //Enables No Map Background, Fade, Tiles, & Objects for quicker map rush
-	int oldChannel = ReadPointer(ServerBase, OFS_Channel);
+	int oldChannel = ReadPointer(ServerBase, OFS_Channel) + 1;
 
 	std::vector<SpawnControlData*> *oldSpawnControl = Assembly::spawnControl; //Save old spawn control list
 	Assembly::spawnControl = new std::vector<SpawnControlData*>(); //Create a new spawn control list for map rushing
@@ -2821,7 +2894,7 @@ static void findMapNamesStartingWithStr(String^ str) {
 //Starts Map Rush when clicked
 void MainForm::bMapRush_Click(System::Object^  sender, System::EventArgs^  e) {
 	//auto start = std::chrono::high_resolution_clock::now();
-	if(!GlobalRefs::isMapRushing && !PointerFuncs::getMapID()->Equals("0")) {
+        if(!GlobalRefs::isMapRushing && PointerFuncs::getMapID() != 0) {
 		int mapDestID = 0;
 		if (INT::TryParse(tbMapRusherDestination->Text, mapDestID))
 			if (mapDestID >= 0 && mapDestID <= 999999999)
@@ -2851,20 +2924,11 @@ void MainForm::lvMapRusherSearch_MouseDoubleClick(System::Object^  sender, Syste
 }
 
 //Find maps with names starting with text entered so far
-void MainForm::tbMapRusherSearch_TextChanged(System::Object^  sender, System::EventArgs^  e) {
-	lvMapRusherSearch->Items->Clear();
+void MainForm::tbMapRusherSearch_KeyUp(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
+        lvMapRusherSearch->Items->Clear();
 
-	if(tbMapRusherSearch->Text != "")
-		findMapNamesStartingWithStr(tbMapRusherSearch->Text);
-}
-
-//Changes color of text to show that the text has changed
-void MainForm::lbMapRusherStatus_TextChanged(System::Object^  sender, System::EventArgs^  e) {	
-	lbMapRusherStatus->ForeColor = Color::DimGray;
-	Application::DoEvents();
-	Sleep(50);
-	lbMapRusherStatus->ForeColor = Color::White;
-	Application::DoEvents();
+        if(tbMapRusherSearch->Text != "")
+                findMapNamesStartingWithStr(tbMapRusherSearch->Text);
 }
 #pragma endregion
 
