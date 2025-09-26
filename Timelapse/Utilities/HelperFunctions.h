@@ -6,17 +6,17 @@ using namespace System;
 #pragma region Helper Functions
 bool IsInGame()
 {
-	int mapID = Convert::ToInt32(PointerFuncs::getMapID());
+        int mapID = PointerFuncs::getMapID();
 
-	if (!mapID == 0) //&& !PointerFuncs::getCharName()->Equals("CharName")
-		return true;
+        if (mapID != 0) //&& !PointerFuncs::getCharName()->Equals("CharName")
+                return true;
 
 	return false;
 }
 
 bool ValidToAttack()
 {
-	int attCnt = Convert::ToInt32(PointerFuncs::getAttackCount());
+        int attCnt = PointerFuncs::getAttackCount();
 
 	// check for weapon and ammo
 	if (!(attCnt > 99) && IsInGame())
@@ -27,7 +27,7 @@ bool ValidToAttack()
 
 bool ValidToLoot()
 {
-	int pplCnt = Convert::ToInt32(PointerFuncs::getPeopleCount());
+        int pplCnt = PointerFuncs::getPeopleCount();
 
 	if (!(pplCnt > 0) && IsInGame())
 		return true;
