@@ -815,15 +815,19 @@ void _stdcall AutoCC(int toChannel) {
 	}
 	else channel = toChannel;
 
-	if (channel <= 0) return;
-	if (channelCount > 0 && channel > channelCount) return;
+        if (MainForm::TheInstance->rbPacket->Checked) {
+                String^ packet = "";
+                writeBytes(packet, gcnew array<BYTE>{0x27, 0x00}); // Auto CC opcode
+                writeByte(packet, (BYTE)channel); // Target channel
+                writeByte(packet, (BYTE)(rand() % 0x100));
+                writeByte(packet, (BYTE)(rand() % 0x100));
+                writeByte(packet, (BYTE)(rand() % 0x100));
+                writeByte(packet, 0); // Unknown
+                SendPacket(packet); //Send Auto CC Packet
+        }
+        else
+                Hooks::ChangeChannel(channel); //CallCCFunc(channel); //Call Auto CC Function
 
-        int serverChannelIndex = channel - 1;
-
-        if (MainForm::TheInstance->rbPacket->Checked)
-                SendPacket(gcnew String("27 00 " + serverChannelIndex.ToString("X2") + " ** ** ** 00")); //Send Auto CC Packet
-	else
-		Hooks::ChangeChannel(channel); //CallCCFunc(channel); //Call Auto CC Function
 
 	Sleep(200);
 }
@@ -834,9 +838,17 @@ void _stdcall AutoCS() {
 			MessageBox::Show("Error: CS Delay textbox cannot be empty");
 			return;
 		}
-		SendPacket(gcnew String("28 00 ** ** ** 00")); //Send go to CS packet
-		Sleep(Convert::ToUInt32(MainForm::TheInstance->tbCSDelay->Text));
-		SendPacket(gcnew String("26 00")); //Send transfer back to field packet
+                String^ packet = "";
+                writeBytes(packet, gcnew array<BYTE>{0x28, 0x00}); // Go to Cash Shop opcode
+                writeByte(packet, (BYTE)(rand() % 0x100));
+                writeByte(packet, (BYTE)(rand() % 0x100));
+                writeByte(packet, (BYTE)(rand() % 0x100));
+                writeByte(packet, 0); // Unknown
+                SendPacket(packet); //Send go to CS packet
+                Sleep(Convert::ToUInt32(MainForm::TheInstance->tbCSDelay->Text));
+                packet = "";
+                writeBytes(packet, gcnew array<BYTE>{0x26, 0x00}); // Transfer back to field opcode
+                SendPacket(packet); //Send transfer back to field packet
 		Sleep(500);
 	}
 	else 
