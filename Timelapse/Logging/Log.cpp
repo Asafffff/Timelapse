@@ -4,53 +4,52 @@ using namespace System;
 using namespace System::IO;
 using namespace Timelapse::Logging;
 
-ConsoleLogHandler^ Log::consoleHandler = nullptr;
+ConsoleLogHandler ^ Log::consoleHandler = nullptr;
 
-void Log::Initialize(ConsoleLogHandler^ handler) {
-        consoleHandler = handler;
+void Log::Initialize(ConsoleLogHandler ^ handler) {
+    consoleHandler = handler;
 }
 
-void Log::WriteLine(String^ message) {
-        StreamWriter^ sw = {};
+void Log::WriteLine(String ^ message) {
+    StreamWriter ^ sw = {};
 
-        try {
-                sw = gcnew StreamWriter(GetLogPath(), true);
+    try {
+        sw = gcnew StreamWriter(GetLogPath(), true);
 
-                if (message == String::Empty)
-                        sw->WriteLine();
-                else
-                        sw->WriteLine(DateTime::Now.ToString() + " : " + message);
-        }
-        catch (Exception^) {}
-        finally {
-                if (sw)
-                        delete static_cast<IDisposable^>(sw);
-        }
+        if (message == String::Empty)
+            sw->WriteLine();
+        else
+            sw->WriteLine(DateTime::Now.ToString() + " : " + message);
+    } catch (Exception ^) {
+    } finally {
+        if (sw)
+            delete static_cast<IDisposable ^>(sw);
+    }
 }
 
 void Log::WriteLine() {
-        WriteLine(String::Empty);
+    WriteLine(String::Empty);
 }
 
-String^ Log::GetLogPath() {
-        String^ AppDataFolder = Environment::GetFolderPath(Environment::SpecialFolder::ApplicationData);
-        String^ LogsFilePath = {};
+String ^ Log::GetLogPath() {
+    String ^ AppDataFolder = Environment::GetFolderPath(Environment::SpecialFolder::ApplicationData);
+    String ^ LogsFilePath = {};
 
-        try {
-                String^ TimelapseFolderPath = Path::Combine(AppDataFolder, "Timelapse");
-                LogsFilePath = Path::Combine(TimelapseFolderPath, "Log.txt");
-        }
-        catch (Exception^){}
+    try {
+        String ^ TimelapseFolderPath = Path::Combine(AppDataFolder, "Timelapse");
+        LogsFilePath = Path::Combine(TimelapseFolderPath, "Log.txt");
+    } catch (Exception ^) {
+    }
 
-        return LogsFilePath;
+    return LogsFilePath;
 }
 
-void Log::WriteLineToConsole(String^ message) {
-        if (String::IsNullOrEmpty(message)) {
-                return;
-        }
+void Log::WriteLineToConsole(String ^ message) {
+    if (String::IsNullOrEmpty(message)) {
+        return;
+    }
 
-        if (consoleHandler != nullptr) {
-                consoleHandler(message);
-        }
+    if (consoleHandler != nullptr) {
+        consoleHandler(message);
+    }
 }

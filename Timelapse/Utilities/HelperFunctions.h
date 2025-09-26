@@ -4,34 +4,31 @@
 using namespace System;
 
 #pragma region Helper Functions
-bool IsInGame()
-{
-        int mapID = PointerFuncs::getMapID();
+bool IsInGame() {
+    int mapID = PointerFuncs::getMapID();
 
-        if (mapID != 0) //&& !PointerFuncs::getCharName()->Equals("CharName")
-                return true;
+    if (mapID != 0) //&& !PointerFuncs::getCharName()->Equals("CharName")
+        return true;
 
-	return false;
+    return false;
 }
 
-bool ValidToAttack()
-{
-        int attCnt = PointerFuncs::getAttackCount();
+bool ValidToAttack() {
+    int attCnt = PointerFuncs::getAttackCount();
 
-	// check for weapon and ammo
-	if (!(attCnt > 99) && IsInGame())
-		return true;
+    // check for weapon and ammo
+    if (!(attCnt > 99) && IsInGame())
+        return true;
 
-	return false;
+    return false;
 }
 
-bool ValidToLoot()
-{
-        int pplCnt = PointerFuncs::getPeopleCount();
+bool ValidToLoot() {
+    int pplCnt = PointerFuncs::getPeopleCount();
 
-	if (!(pplCnt > 0) && IsInGame())
-		return true;
+    if (!(pplCnt > 0) && IsInGame())
+        return true;
 
-	return false;
+    return false;
 }
 #pragma endregion
