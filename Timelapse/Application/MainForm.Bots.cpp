@@ -25,7 +25,8 @@ void MainForm::cbHP_CheckedChanged(Object ^ sender, EventArgs ^ e) {
         GlobalRefs::macroHP->Toggle(true);
         MacrosEnabled::bMacroHP = true;
     } else {
-        GlobalRefs::macroHP->Toggle(false);
+        if (GlobalRefs::macroHP != nullptr)
+            GlobalRefs::macroHP->Toggle(false);
         MacrosEnabled::bMacroHP = false;
     }
 }
@@ -59,7 +60,8 @@ void MainForm::cbMP_CheckedChanged(Object ^ sender, EventArgs ^ e) {
         GlobalRefs::macroMP->Toggle(true);
         MacrosEnabled::bMacroMP = true;
     } else {
-        GlobalRefs::macroMP->Toggle(false);
+        if (GlobalRefs::macroMP != nullptr)
+            GlobalRefs::macroMP->Toggle(false);
         MacrosEnabled::bMacroMP = false;
     }
 }
