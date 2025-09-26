@@ -123,40 +123,72 @@ static MapData ^ getMap(int mapID) {
     return nullptr;
 }
 
-    // Recursive Depth First Search (DFS) to find path
-    void existsInNextMapDFS(int currMapID, int startMapID, int destMapID, int numRecursions, cliext::vector<MapPath ^> ^ searchList, cliext::vector<MapPath ^> ^ finalPath) {
-    if (currMapID == destMapID) {
-        if ((int)(finalPath->size()) == 0 || finalPath->size() > searchList->size())
-            *finalPath = searchList; // Current path is the shortest path to destination map
+// Breadth First Search (BFS) to find the shortest path between two maps
+static bool findShortestPathBFS(int startMapID, int destMapID, System::Collections::Generic::Dictionary<int, MapPath ^> ^ predecessors) {
+    System::Collections::Generic::Queue<int> ^ toVisit = gcnew System::Collections::Generic::Queue<int>();
+    System::Collections::Generic::HashSet<int> ^ visited = gcnew System::Collections::Generic::HashSet<int>();
 
-        return; // Returning so that no further maps from this one are searched
+    toVisit->Enqueue(startMapID);
+    visited->Add(startMapID);
+
+    while (toVisit->Count > 0) {
+        int currentMapID = toVisit->Dequeue();
+        if (currentMapID == destMapID)
+            return true;
+
+        MapData ^ currentMap = getMap(currentMapID);
+        if (currentMap == nullptr || currentMap->portals == nullptr || currentMap->portals->Count == 0)
+            continue;
+
+        for each (PortalData ^ portalData in currentMap->portals) {
+            int nextMapID = portalData->toMapID;
+            if (visited->Contains(nextMapID))
+                continue;
+
+            MapData ^ nextMap = getMap(nextMapID);
+            if (nextMap == nullptr)
+                continue; // Skip portals where the destination map metadata is missing
+
+            visited->Add(nextMapID);
+            predecessors[nextMapID] = gcnew MapPath(currentMapID, portalData);
+            if (nextMapID == destMapID)
+                return true;
+
+            toVisit->Enqueue(nextMapID);
+        }
     }
 
-    if (getMap(currMapID)->portals->Count == 0 || numRecursions > 300)
-        return; // If current map is an endpoint or if number of recursions are over 300, no further maps are searched
-
-    for each (PortalData ^ portalData in getMap(currMapID)->portals) {
-        bool existsInSearchList = false;
-        for each (MapPath ^ mapData in searchList)
-            if (mapData->mapID == portalData->toMapID)
-                existsInSearchList = true;
-
-        if (getMap(portalData->toMapID) == nullptr)
-            continue; // Skips portals where the portal's map is not found
-        if (existsInSearchList)
-            continue; // Skip portals where it goes to maps already in search path to prevent loop backs
-
-        MapPath ^ mapPath = gcnew MapPath(currMapID, portalData);
-        searchList->push_back(mapPath);
-        existsInNextMapDFS(portalData->toMapID, startMapID, destMapID, numRecursions + 1, searchList, finalPath); // Recursive call
-        searchList->pop_back();
-    }
+    return false;
 }
 
-// Uses recursive existsInNextMapDFS() to generate a path
+// Uses BFS helper to generate the shortest path
 cliext::vector<MapPath ^> ^ generatePath(int startMapID, int destMapID) {
-    cliext::vector<MapPath ^> ^ searchList = gcnew cliext::vector<MapPath ^>(), ^finalPath = gcnew cliext::vector<MapPath ^>();
-    existsInNextMapDFS(startMapID, startMapID, destMapID, 0, searchList, finalPath); // Gets shortest path and puts it into finalPath (if there exists a path)
+    MapData ^ startMap = getMap(startMapID);
+    MapData ^ destinationMap = getMap(destMapID);
+    cliext::vector<MapPath ^> ^ finalPath = gcnew cliext::vector<MapPath ^>();
+
+    if (startMap == nullptr || destinationMap == nullptr)
+        return finalPath;
+
+    System::Collections::Generic::Dictionary<int, MapPath ^> ^ predecessors = gcnew System::Collections::Generic::Dictionary<int, MapPath ^>();
+    if (!findShortestPathBFS(startMapID, destMapID, predecessors))
+        return finalPath;
+
+    System::Collections::Generic::List<MapPath ^> ^ reversedPath = gcnew System::Collections::Generic::List<MapPath ^>();
+    int currentMapID = destMapID;
+
+    while (currentMapID != startMapID) {
+        if (!predecessors->ContainsKey(currentMapID))
+            return finalPath;
+
+        MapPath ^ step = predecessors[currentMapID];
+        reversedPath->Add(step);
+        currentMapID = step->mapID;
+    }
+
+    for (int i = reversedPath->Count - 1; i >= 0; --i)
+        finalPath->push_back(reversedPath[i]);
+
     return finalPath;
 }
 
