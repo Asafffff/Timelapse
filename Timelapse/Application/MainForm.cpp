@@ -680,7 +680,7 @@ void MainForm::cbLoot_CheckedChanged(Object^  sender, EventArgs^  e) {
 				return;
 			}
 		}
-		this->tAutoLoot->Interval = Convert::ToInt32(tbAttackDelay->Text);
+               this->tAutoLoot->Interval = Convert::ToInt32(tbLootDelay->Text);
 		this->tAutoLoot->Enabled = true; //cbLoot->Checked
 		MacrosEnabled::bMacroLoot = true;
 	}
