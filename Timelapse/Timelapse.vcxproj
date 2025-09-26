@@ -139,28 +139,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Application\MainForm.cpp" />
-    <ClCompile Include="Application\MainForm.Bots.cpp" />
-    <ClCompile Include="Application\MainForm.Designer.cpp" />
-    <ClCompile Include="Application\MainForm.Filters.cpp" />
-    <ClCompile Include="Application\MainForm.Hacks.cpp" />
-    <ClCompile Include="Application\MainForm.MapRusher.cpp" />
-    <ClCompile Include="Application\MainForm.Packets.cpp" />
-    <ClCompile Include="Application\MainForm.Testing.cpp" />
-    <ClCompile Include="Application\MainForm.Validation.cpp" />
-    <ClCompile Include="Application\Settings.cpp" />
+    <ClCompile Include="Application\MainForm\MainForm.cpp" />
+    <ClCompile Include="Application\MainForm\BotsTab.cpp" />
+    <ClCompile Include="Application\MainForm\Designer.cpp" />
+    <ClCompile Include="Application\MainForm\FiltersTab.cpp" />
+    <ClCompile Include="Application\MainForm\HacksTab.cpp" />
+    <ClCompile Include="Application\MainForm\MapRusherFeatures.cpp" />
+    <ClCompile Include="Application\MainForm\PacketTools.cpp" />
+    <ClCompile Include="Application\MainForm\TestingUtilities.cpp" />
+    <ClCompile Include="Application\MainForm\ValidationHelpers.cpp" />
+    <ClCompile Include="Application\Settings\Settings.cpp" />
     <ClCompile Include="Core\Inventory.cpp" />
     <ClCompile Include="Core\Packet.cpp" />
     <ClCompile Include="Input\Mouse.cpp" />
     <ClCompile Include="Logging\Log.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Application\Macro.h" />
-    <ClInclude Include="Application\MainForm.Controls.h" />
-    <ClInclude Include="Application\MainForm.EventHandlers.h" />
-    <ClInclude Include="Application\MainForm.Internal.h" />
-    <ClInclude Include="Application\MainForm.MapRusher.h" />
-    <ClInclude Include="Application\Settings.h" />
+    <ClInclude Include="Application\Macros\Macro.h" />
+    <ClInclude Include="Application\MainForm\ControlDefinitions.h" />
+    <ClInclude Include="Application\MainForm\EventHandlers.h" />
+    <ClInclude Include="Application\MainForm\SharedState.h" />
+    <ClInclude Include="Application\MainForm\MapRusherFeatures.h" />
+    <ClInclude Include="Application\Settings\Settings.h" />
     <ClInclude Include="Core\Inventory.h" />
     <ClInclude Include="Core\Packet.h" />
     <ClInclude Include="Core\Structs.h" />
@@ -175,13 +175,13 @@
     <ClInclude Include="Logging\Log.h" />
     <ClInclude Include="Utilities\GeneralFunctions.h" />
     <ClInclude Include="Utilities\HelperFunctions.h" />
-    <ClInclude Include="Application\MainForm.h">
+    <ClInclude Include="Application\MainForm\MainForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="Resources\resource.h" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Application\MainForm.resx">
+    <EmbeddedResource Include="Application\MainForm\MainForm.resx">
       <DependentUpon>MainForm.h</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>

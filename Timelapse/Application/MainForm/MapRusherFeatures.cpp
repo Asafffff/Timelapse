@@ -1,5 +1,5 @@
-#include "MainForm.Internal.h"
-#include "MainForm.MapRusher.h"
+#include "SharedState.h"
+#include "MapRusherFeatures.h"
 
 using namespace Timelapse;
 using namespace Timelapse::Logging;

@@ -1,5 +1,5 @@
-#include "MainForm.Internal.h"
-#include "MainForm.MapRusher.h"
+#include "SharedState.h"
+#include "MapRusherFeatures.h"
 
 [assembly:System::Diagnostics::DebuggableAttribute(true, true)]; // For debugging purposes
 
