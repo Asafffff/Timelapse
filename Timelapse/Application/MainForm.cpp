@@ -2354,19 +2354,67 @@ System::Void MainForm::cbAP_CheckedChanged(System::Object^ sender, System::Event
 #pragma endregion
 
 void MainForm::tPacketLog_Tick(System::Object^  sender, System::EventArgs^  e) {
-	if (!GlobalRefs::bSendPacketLog && !GlobalRefs::bRecvPacketLog)
-		this->tPacketLog->Enabled = false;
+        if (!GlobalRefs::bSendPacketLog && !GlobalRefs::bRecvPacketLog)
+                this->tPacketLog->Enabled = false;
 
-	//std::vector<COutPacket*> *sentPacketQueue = Assembly::sendPacketLogQueue;
-	if(GlobalRefs::bSendPacketLog && !Assembly::sendPacketQueue->empty()) {
-		COutPacket *packet = (COutPacket*)Assembly::sendPacketQueue->front();
-		
-		String^ packetHeader = "";
-		writeUnsignedShort(packetHeader, *packet->Header);
-		Log::WriteLineToConsole(packetHeader);
-		
-		Assembly::sendPacketQueue->pop();
-	}
+        //std::vector<COutPacket*> *sentPacketQueue = Assembly::sendPacketLogQueue;
+        while(GlobalRefs::bSendPacketLog && !Assembly::sendPacketQueue->empty()) {
+                COutPacket *packet = (COutPacket*)Assembly::sendPacketQueue->front();
+
+                String^ packetHeader = String::Empty;
+                String^ packetPayload = String::Empty;
+
+                if (packet->Data != nullptr && packet->Size >= 2) {
+                        USHORT headerValue = static_cast<USHORT>(packet->Data[0] | (packet->Data[1] << 8));
+                        writeUnsignedShort(packetHeader, headerValue);
+
+                        for (ULONG i = 2; i < packet->Size; ++i)
+                                writeByte(packetPayload, packet->Data[i]);
+                }
+                else if (packet->Data != nullptr && packet->Size > 0) {
+                        writeByte(packetPayload, packet->Data[0]);
+                }
+
+                if (String::IsNullOrEmpty(packetHeader))
+                        packetHeader = "????";
+
+                String^ payloadLog = packetPayload->Length > 0 ? packetPayload : "<no payload>";
+                Log::WriteLineToConsole("SendPacket::" + packetHeader + " => " + payloadLog);
+
+                Windows::Forms::TreeView^ treeView = Timelapse::MainForm::TheInstance->tvSendPackets;
+                if (treeView != nullptr) {
+                        const int MAX_PACKETS_PER_HEADER = 50;
+                        treeView->BeginUpdate();
+
+                        Windows::Forms::TreeNode^ headerNode = nullptr;
+                        if (treeView->Nodes->ContainsKey(packetHeader)) {
+                                headerNode = treeView->Nodes[packetHeader];
+                        }
+                        else {
+                                headerNode = gcnew Windows::Forms::TreeNode(packetHeader);
+                                headerNode->Name = packetHeader;
+                                treeView->Nodes->Add(headerNode);
+                        }
+
+                        Windows::Forms::TreeNode^ payloadNode = gcnew Windows::Forms::TreeNode(payloadLog);
+                        headerNode->Nodes->Add(payloadNode);
+                        headerNode->Expand();
+
+                        while (headerNode->Nodes->Count > MAX_PACKETS_PER_HEADER)
+                                headerNode->Nodes->RemoveAt(0);
+
+                        treeView->EndUpdate();
+                }
+
+                Assembly::sendPacketQueue->pop();
+
+                if (packet->Data != nullptr) {
+                        delete[] packet->Data;
+                        packet->Data = nullptr;
+                }
+
+                delete packet;
+        }
 
 	/*if(!GlobalRefs::bSendPacketLog) {
 		for (std::vector<COutPacket>::const_iterator i = Assembly::sendPacketLogQueue->begin(); i != Assembly::sendPacketLogQueue->end(); ++i) {

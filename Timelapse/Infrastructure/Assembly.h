@@ -5,6 +5,7 @@
 #include "../Core/Packet.h"
 #include "../Libraries/detours.h"
 #include <queue>
+#include <cstring>
 
 #pragma comment(lib, "detours.lib")
 #define CodeCave(name) static void __declspec(naked) ##name() { _asm
@@ -134,23 +135,31 @@ inline bool __stdcall shouldMobBeFiltered() {
 
 static std::queue<COutPacket*> *sendPacketQueue = new std::queue<COutPacket*>();
 inline void __stdcall addSendPacket() {
-	//void* packet = new COutPacket();
-	//memcpy((void*)packet, (void*)sendPacketData->packet, sizeof(COutPacket));
-	COutPacket *packet = new COutPacket();
-	COutPacket *oldPacket = sendPacketData->packet;
+        COutPacket *oldPacket = sendPacketData->packet;
+        if (oldPacket == nullptr) {
+                return;
+        }
 
-	packet->Loopback = oldPacket->Loopback;
-	UCHAR data = *oldPacket->Data;
-	//void unk = *oldPacket->Unk;
-	USHORT header = *oldPacket->Header;
+        COutPacket *packet = new COutPacket();
+        packet->Loopback = oldPacket->Loopback;
+        packet->Size = oldPacket->Size;
+        packet->Offset = oldPacket->Offset;
+        packet->EncryptedByShanda = oldPacket->EncryptedByShanda;
 
-	packet->Data = &data;
-	packet->Unk = oldPacket->Unk;
-	packet->Header = &header;
-	packet->Size = oldPacket->Size;
-	packet->Offset = oldPacket->Offset;
-	packet->EncryptedByShanda = oldPacket->EncryptedByShanda;
-	sendPacketQueue->push(packet);
+        if (oldPacket->Size > 0 && oldPacket->Data != nullptr) {
+                PUCHAR dataCopy = new UCHAR[oldPacket->Size];
+                memcpy(dataCopy, oldPacket->Data, oldPacket->Size);
+                packet->Data = dataCopy;
+                packet->Unk = dataCopy;
+                packet->Header = reinterpret_cast<PUSHORT>(dataCopy);
+        }
+        else {
+                packet->Data = nullptr;
+                packet->Unk = nullptr;
+                packet->Header = nullptr;
+        }
+
+        sendPacketQueue->push(packet);
 }
 
 #pragma unmanaged
