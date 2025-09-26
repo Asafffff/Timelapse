@@ -5,13 +5,13 @@
 #include <sstream>
 
 #include "MainForm.h"
-#include "Macro.h"
-#include "Settings.h"
-#include "../Core/Packet.h"
-#include "../Core/Structs.h"
-#include "../Infrastructure/Addresses.h"
-#include "../Infrastructure/Hooks.h"
-#include "../Logging/Log.h"
+#include "../Macros/Macro.h"
+#include "../Settings/Settings.h"
+#include "../../Core/Packet.h"
+#include "../../Core/Structs.h"
+#include "../../Infrastructure/Addresses.h"
+#include "../../Infrastructure/Hooks.h"
+#include "../../Logging/Log.h"
 
 bool isKeyValid(System::Object ^ sender, System::Windows::Forms::KeyPressEventArgs ^ e, bool isSigned);
 

@@ -31,8 +31,8 @@ ref class MainForm : public System::Windows::Forms::Form {
 
   private:
     void InitializeComponent();
-#include "MainForm.Controls.h"
-#include "MainForm.EventHandlers.h"
+#include "ControlDefinitions.h"
+#include "EventHandlers.h"
 };
 
 } // namespace Timelapse

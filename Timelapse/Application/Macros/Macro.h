@@ -1,11 +1,11 @@
 #pragma once
 #include <cliext/queue>
-#include "MainForm.h"
+#include "../MainForm/MainForm.h"
 #include <Windows.h>
 #include <winuser.h>
-#include "../Logging/Log.h"
-#include "../Infrastructure/MapleFunctions.h"
-#include "../Infrastructure/Addresses.h"
+#include "../../Logging/Log.h"
+#include "../../Infrastructure/MapleFunctions.h"
+#include "../../Infrastructure/Addresses.h"
 
 using Timelapse::Logging::Log;
 

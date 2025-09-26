@@ -1,4 +1,4 @@
-#include "MainForm.Internal.h"
+#include "SharedState.h"
 
 #include <cctype>
 
