@@ -57,6 +57,18 @@
     <ClInclude Include="Application\MainForm.h">
       <Filter>Header Files\Application</Filter>
     </ClInclude>
+    <ClInclude Include="Application\MainForm.Controls.h">
+      <Filter>Header Files\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\MainForm.EventHandlers.h">
+      <Filter>Header Files\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\MainForm.Internal.h">
+      <Filter>Header Files\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\MainForm.MapRusher.h">
+      <Filter>Header Files\Application</Filter>
+    </ClInclude>
     <ClInclude Include="Application\Macro.h">
       <Filter>Header Files\Application</Filter>
     </ClInclude>
@@ -111,6 +123,27 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application\MainForm.cpp">
+      <Filter>Source Files\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\MainForm.Bots.cpp">
+      <Filter>Source Files\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\MainForm.Designer.cpp">
+      <Filter>Source Files\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\MainForm.Filters.cpp">
+      <Filter>Source Files\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\MainForm.Hacks.cpp">
+      <Filter>Source Files\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\MainForm.MapRusher.cpp">
+      <Filter>Source Files\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\MainForm.Packets.cpp">
+      <Filter>Source Files\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\MainForm.Testing.cpp">
       <Filter>Source Files\Application</Filter>
     </ClCompile>
     <ClCompile Include="Application\Settings.cpp">

@@ -140,6 +140,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application\MainForm.cpp" />
+    <ClCompile Include="Application\MainForm.Bots.cpp" />
+    <ClCompile Include="Application\MainForm.Designer.cpp" />
+    <ClCompile Include="Application\MainForm.Filters.cpp" />
+    <ClCompile Include="Application\MainForm.Hacks.cpp" />
+    <ClCompile Include="Application\MainForm.MapRusher.cpp" />
+    <ClCompile Include="Application\MainForm.Packets.cpp" />
+    <ClCompile Include="Application\MainForm.Testing.cpp" />
     <ClCompile Include="Application\Settings.cpp" />
     <ClCompile Include="Core\Inventory.cpp" />
     <ClCompile Include="Core\Packet.cpp" />
@@ -148,6 +155,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Macro.h" />
+    <ClInclude Include="Application\MainForm.Controls.h" />
+    <ClInclude Include="Application\MainForm.EventHandlers.h" />
+    <ClInclude Include="Application\MainForm.Internal.h" />
+    <ClInclude Include="Application\MainForm.MapRusher.h" />
     <ClInclude Include="Application\Settings.h" />
     <ClInclude Include="Core\Inventory.h" />
     <ClInclude Include="Core\Packet.h" />
