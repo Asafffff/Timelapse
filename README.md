@@ -27,7 +27,7 @@ A MapleStory v83 Trainer
 - Code console for output of various logging streams
 ##### AutoCC/CS
 - (ADD) Add option for auto face left/right after cc/cs
-- Fix AutoCC tbCCCSTime, tbCCCSPeople, tbCCCSAttack, tbCCCSMob being possibly empty/null (add error message) :: if time/people == 0, change to 1
+- Fix AutoCC tbCCCSTime, tbCCCSPeople, tbCCCSAttack, tbCCCSMobCount being possibly empty/null (add error message) :: if time/people == 0, change to 1
 - Fix Auto CS function call (doesn't work as intended, get rid of blue box popup on MigrateToCashShop Call)
 - Make Auto CC/CS run on threads instead of timers. Timers cause the trainer to hang up 
 - Add option to select witch channels should be used as random choice of AutoCC and which should be prohibited from entering
@@ -87,7 +87,7 @@ A MapleStory v83 Trainer
 - All readpointers/readmultipointers pointer functions should return integer values, caller function should convert to string. Only applicable to number values, not text values
 - Look into disabling textbox values if something is checked, also remove all textChanged events
 - Fix aesthetics of listviews (accommodating for vertical scrollbars), and make sure all listview code is identical in terms of adding/deleting/searching
-- Look into changing names of certain textboxes to add Count (ie tbHPMob should be tbHPMobCount)
+- Look into changing names of certain textboxes to add a Count suffix where appropriate
 - Look into changing names of all textboxes with name "interval" to "delay", makes more sense
 - For all new number only textboxes, double check to see if the keypress event (in MainForm.h) is defined
 - Check to make sure all char arrays are textual and unsigned char are for memory usage

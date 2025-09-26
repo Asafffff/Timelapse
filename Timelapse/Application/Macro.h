@@ -191,8 +191,8 @@ ref class Macro {
 			break;
 			case MacroType::LOOTMACRO:
 				if (MacrosEnabled::bMacroLoot && HelperFuncs::ValidToLoot()) {
-					if (String::IsNullOrWhiteSpace(Timelapse::MainForm::TheInstance->tbLootItem->Text)) break;
-					const int itemCntLootLimit = Convert::ToUInt32(Timelapse::MainForm::TheInstance->tbLootItem->Text);
+					if (String::IsNullOrWhiteSpace(Timelapse::MainForm::TheInstance->tbLootItemCount->Text)) break;
+					const int itemCntLootLimit = Convert::ToUInt32(Timelapse::MainForm::TheInstance->tbLootItemCount->Text);
 					const int itemCntCurrent = ReadPointer(DropPoolBase, OFS_ItemCount);
 
 					if (itemCntCurrent > itemCntLootLimit) {
@@ -203,8 +203,8 @@ ref class Macro {
 			break;
 			case MacroType::ATTACKMACRO:
 				if (MacrosEnabled::bMacroAttack && HelperFuncs::ValidToAttack()) {
-					if (String::IsNullOrWhiteSpace(Timelapse::MainForm::TheInstance->tbAttackMob->Text)) break;
-					const int mobCntAttackLimit = Convert::ToUInt32(Timelapse::MainForm::TheInstance->tbAttackMob->Text);
+					if (String::IsNullOrWhiteSpace(Timelapse::MainForm::TheInstance->tbAttackMobCount->Text)) break;
+					const int mobCntAttackLimit = Convert::ToUInt32(Timelapse::MainForm::TheInstance->tbAttackMobCount->Text);
 					const int mobCntCurrent = ReadPointer(MobPoolBase, OFS_MobCount);
 
 					if (mobCntCurrent > mobCntAttackLimit) {

@@ -680,7 +680,18 @@ void MainForm::tAutoAttack_Tick(Object^ sender, EventArgs^ e) {
 	}
 }
 
-void MainForm::tbAttackMob_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^  e) {
+void MainForm::tbAttackInterval_TextChanged(Object^  sender, EventArgs^  e) {
+	if (GlobalRefs::macroAttack != nullptr) {
+		if (String::IsNullOrWhiteSpace(tbAttackInterval->Text)) {
+			MessageBox::Show("Error: Attack Interval textbox cannot be empty");
+			return;
+		}
+		GlobalRefs::macroAttack->delay = Convert::ToUInt32(tbAttackInterval->Text);
+	}
+}
+
+void MainForm::tbAttackMobCount_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^  e) {
+
 	if (!isKeyValid(sender, e, false)) e->Handled = true; //If key is not valid, do nothing and indicate that it has been handled
 }
 
@@ -722,7 +733,18 @@ void MainForm::tAutoLoot_Tick(System::Object^  sender, System::EventArgs^  e) {
 	}
 }
 
-void MainForm::tbLootItem_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^  e) {
+void MainForm::tbLootInterval_TextChanged(Object^  sender, EventArgs^  e) {
+	if (GlobalRefs::macroLoot != nullptr) {
+		if (String::IsNullOrWhiteSpace(tbLootInterval->Text)) {
+			MessageBox::Show("Error: Loot Interval textbox cannot be empty");
+			return;
+		}
+		GlobalRefs::macroLoot->delay = Convert::ToUInt32(tbLootInterval->Text);
+	}
+}
+
+void MainForm::tbLootItemCount_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^  e) {
+
 	if (!isKeyValid(sender, e, false)) e->Handled = true; //If key is not valid, do nothing and indicate that it has been handled
 }
 
@@ -898,7 +920,7 @@ void MainForm::AutoCCCSTimer_Tick(Object^  sender, EventArgs^  e) {
 	}
 
 	if (cbCCCSMob->Checked) {
-		if (ReadPointer(MobPoolBase, OFS_MobCount) < Convert::ToUInt32(tbCCCSMob->Text)) {
+		if (ReadPointer(MobPoolBase, OFS_MobCount) < Convert::ToUInt32(tbCCCSMobCount->Text)) {
 			if (rbCC->Checked) AutoCC(-1);
 			else AutoCS();
 		}
@@ -948,7 +970,7 @@ void MainForm::tbCCCSAttack_KeyPress(Object^  sender, Windows::Forms::KeyPressEv
 	if (!isKeyValid(sender, e, false)) e->Handled = true; //If key is not valid, do nothing and indicate that it has been handled
 }
 
-void MainForm::tbCCCSMob_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^  e) {
+void MainForm::tbCCCSMobCount_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^  e) {
 	if (!isKeyValid(sender, e, false)) e->Handled = true; //If key is not valid, do nothing and indicate that it has been handled
 }
 
@@ -1534,12 +1556,12 @@ void MainForm::tbSpawnControlY_KeyPress(Object^  sender, Windows::Forms::KeyPres
 void KamiLoop() {
 	while (GlobalRefs::bKami || GlobalRefs::bKamiLoot) {
 		if (GlobalRefs::bKami && GlobalRefs::bKamiLoot) {
-			if(ReadPointer(DropPoolBase, OFS_ItemCount) > Convert::ToUInt32(MainForm::TheInstance->tbKamiLootItem->Text)) {
+			if(ReadPointer(DropPoolBase, OFS_ItemCount) > Convert::ToUInt32(MainForm::TheInstance->tbKamiLootItemCount->Text)) {
 				if (!GlobalRefs::isChangingField && !GlobalRefs::isMapRushing) {}
 					Teleport(Assembly::ItemX, Assembly::ItemY + 10);
 				Sleep(Convert::ToUInt32(MainForm::TheInstance->tbKamiLootInterval->Text));
 			}
-			else if (ReadPointer(MobPoolBase, OFS_MobCount) > Convert::ToUInt32(MainForm::TheInstance->tbKamiMob->Text)) {
+			else if (ReadPointer(MobPoolBase, OFS_MobCount) > Convert::ToUInt32(MainForm::TheInstance->tbKamiMobCount->Text)) {
 				POINT telePoint;
 				telePoint.x = ReadMultiPointerSigned(MobPoolBase, 5, OFS_Mob1, OFS_Mob2, OFS_Mob3, OFS_Mob4, OFS_MobX) - Convert::ToInt32(MainForm::TheInstance->tbKamiX->Text);
 				telePoint.y = ReadMultiPointerSigned(MobPoolBase, 5, OFS_Mob1, OFS_Mob2, OFS_Mob3, OFS_Mob4, OFS_MobY) - Convert::ToInt32(MainForm::TheInstance->tbKamiY->Text);
@@ -1551,7 +1573,7 @@ void KamiLoop() {
 			}
 		}
 		else if (GlobalRefs::bKami) {
-			if(ReadPointer(MobPoolBase, OFS_MobCount) > Convert::ToUInt32(MainForm::TheInstance->tbKamiMob->Text)) {
+			if(ReadPointer(MobPoolBase, OFS_MobCount) > Convert::ToUInt32(MainForm::TheInstance->tbKamiMobCount->Text)) {
 				POINT telePoint;
 				telePoint.x = ReadMultiPointerSigned(MobPoolBase, 5, OFS_Mob1, OFS_Mob2, OFS_Mob3, OFS_Mob4, OFS_MobX) - Convert::ToInt32(MainForm::TheInstance->tbKamiX->Text);
 				telePoint.y = ReadMultiPointerSigned(MobPoolBase, 5, OFS_Mob1, OFS_Mob2, OFS_Mob3, OFS_Mob4, OFS_MobY) - Convert::ToInt32(MainForm::TheInstance->tbKamiY->Text);
@@ -1562,7 +1584,7 @@ void KamiLoop() {
 			Sleep(Convert::ToUInt32(MainForm::TheInstance->tbKamiInterval->Text));
 		}
 		else if (GlobalRefs::bKamiLoot) {
-			if (ReadPointer(DropPoolBase, OFS_ItemCount) > Convert::ToUInt32(MainForm::TheInstance->tbKamiLootItem->Text)) {
+			if (ReadPointer(DropPoolBase, OFS_ItemCount) > Convert::ToUInt32(MainForm::TheInstance->tbKamiLootItemCount->Text)) {
 				if (!GlobalRefs::isChangingField && !GlobalRefs::isMapRushing) {}
 					Teleport(Assembly::ItemX, Assembly::ItemY+10); //MessageBox::Show("ItemX: " + Assembly::ItemX.ToString() + " ItemY: " + Assembly::ItemY.ToString());
 			}
@@ -1577,7 +1599,7 @@ void MainForm::cbKami_CheckedChanged(System::Object^  sender, System::EventArgs^
 		tbKamiX->Enabled = false;
 		tbKamiY->Enabled = false;
 		tbKamiInterval->Enabled = false;
-		tbKamiMob->Enabled = false;
+		tbKamiMobCount->Enabled = false;
 		GlobalRefs::bKami = true;
 		if(!GlobalRefs::bKamiLoot)
 			NewThread(KamiLoop);
@@ -1587,14 +1609,14 @@ void MainForm::cbKami_CheckedChanged(System::Object^  sender, System::EventArgs^
 		tbKamiX->Enabled = true;
 		tbKamiY->Enabled = true;
 		tbKamiInterval->Enabled = true;
-		tbKamiMob->Enabled = true;
+		tbKamiMobCount->Enabled = true;
 	}
 }
 
 void MainForm::cbKamiLoot_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
 	if (this->cbKamiLoot->Checked) {
 		tbKamiLootInterval->Enabled = false;
-		tbKamiLootItem->Enabled = false;
+		tbKamiLootItemCount->Enabled = false;
 		GlobalRefs::bKamiLoot = true;
 		cbLoot->Checked = true; //Enable Auto Loot (Required for call to PtInRect)
 		*(ULONG*)PtInRectAddr = (ULONG)Assembly::ItemHook;
@@ -1606,7 +1628,7 @@ void MainForm::cbKamiLoot_CheckedChanged(System::Object^  sender, System::EventA
 		cbLoot->Checked = false; //Disable Auto Loot 
 		*(ULONG*)PtInRectAddr = (ULONG)PtInRect;
 		tbKamiLootInterval->Enabled = true;
-		tbKamiLootItem->Enabled = true;
+		tbKamiLootItemCount->Enabled = true;
 	}
 }
 
@@ -1622,7 +1644,7 @@ void MainForm::tbKamiInterval_KeyPress(Object^  sender, Windows::Forms::KeyPress
 	if (!isKeyValid(sender, e, false)) e->Handled = true; //If key is not valid, do nothing and indicate that it has been handled
 }
 
-void MainForm::tbKamiMob_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^  e) {
+void MainForm::tbKamiMobCount_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^  e) {
 	if (!isKeyValid(sender, e, false)) e->Handled = true; //If key is not valid, do nothing and indicate that it has been handled
 }
 
@@ -1630,7 +1652,7 @@ void MainForm::tbKamiLootInterval_KeyPress(Object^  sender, Windows::Forms::KeyP
 	if (!isKeyValid(sender, e, false)) e->Handled = true; //If key is not valid, do nothing and indicate that it has been handled
 }
 
-void MainForm::tbKamiLootItem_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^  e) {
+void MainForm::tbKamiLootItemCount_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^  e) {
 	if (!isKeyValid(sender, e, false)) e->Handled = true; //If key is not valid, do nothing and indicate that it has been handled
 }
 #pragma endregion
