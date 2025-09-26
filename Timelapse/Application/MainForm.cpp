@@ -624,13 +624,13 @@ void MainForm::tbMP_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^
 void MainForm::cbAttack_CheckedChanged(Object^  sender, EventArgs^  e) {
 	if(this->cbAttack->Checked) {
 		if(GlobalRefs::macroAttack == nullptr) {
-			if (String::IsNullOrWhiteSpace(tbAttackInterval->Text)) {
-				MessageBox::Show("Error: Attack Interval textbox cannot be empty");
+			if (String::IsNullOrWhiteSpace(tbAttackDelay->Text)) {
+				MessageBox::Show("Error: Attack Delay textbox cannot be empty");
 				this->cbAttack->Checked = false;
 				return;
 			}
 		}
-		this->tAutoAttack->Interval = Convert::ToInt32(tbAttackInterval->Text);
+		this->tAutoAttack->Interval = Convert::ToInt32(tbAttackDelay->Text);
 		this->tAutoAttack->Enabled = true; //cbAttack->Checked
 		MacrosEnabled::bMacroAttack = true;
 	}
@@ -640,7 +640,7 @@ void MainForm::cbAttack_CheckedChanged(Object^  sender, EventArgs^  e) {
 	}
 }
 
-void MainForm::tbAttackInterval_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^  e) {
+void MainForm::tbAttackDelay_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^  e) {
 	if (!isKeyValid(sender, e, false)) e->Handled = true; //If key is not valid, do nothing and indicate that it has been handled
 }
 
@@ -650,13 +650,13 @@ void MainForm::tAutoAttack_Tick(Object^ sender, EventArgs^ e) {
 	}
 }
 
-void MainForm::tbAttackInterval_TextChanged(Object^  sender, EventArgs^  e) {
+void MainForm::tbAttackDelay_TextChanged(Object^  sender, EventArgs^  e) {
 	if (GlobalRefs::macroAttack != nullptr) {
-		if (String::IsNullOrWhiteSpace(tbAttackInterval->Text)) {
-			MessageBox::Show("Error: Attack Interval textbox cannot be empty");
+		if (String::IsNullOrWhiteSpace(tbAttackDelay->Text)) {
+			MessageBox::Show("Error: Attack Delay textbox cannot be empty");
 			return;
 		}
-		GlobalRefs::macroAttack->delay = Convert::ToUInt32(tbAttackInterval->Text);
+		GlobalRefs::macroAttack->delay = Convert::ToUInt32(tbAttackDelay->Text);
 	}
 }
 
@@ -674,13 +674,13 @@ void MainForm::comboAttackKey_SelectedIndexChanged(Object^  sender, EventArgs^  
 void MainForm::cbLoot_CheckedChanged(Object^  sender, EventArgs^  e) {
 	if (this->cbLoot->Checked) {
 		if (GlobalRefs::macroLoot == nullptr) {
-			if (String::IsNullOrWhiteSpace(tbLootInterval->Text)) {
-				MessageBox::Show("Error: Loot Interval textbox cannot be empty");
+			if (String::IsNullOrWhiteSpace(tbLootDelay->Text)) {
+				MessageBox::Show("Error: Loot Delay textbox cannot be empty");
 				this->cbLoot->Checked = false;
 				return;
 			}
 		}
-		this->tAutoLoot->Interval = Convert::ToInt32(tbAttackInterval->Text);
+		this->tAutoLoot->Interval = Convert::ToInt32(tbAttackDelay->Text);
 		this->tAutoLoot->Enabled = true; //cbLoot->Checked
 		MacrosEnabled::bMacroLoot = true;
 	}
@@ -690,7 +690,7 @@ void MainForm::cbLoot_CheckedChanged(Object^  sender, EventArgs^  e) {
 	}
 }
 
-void MainForm::tbLootInterval_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^  e) {
+void MainForm::tbLootDelay_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^  e) {
 	if (!isKeyValid(sender, e, false)) e->Handled = true; //If key is not valid, do nothing and indicate that it has been handled
 }
 
@@ -700,13 +700,13 @@ void MainForm::tAutoLoot_Tick(System::Object^  sender, System::EventArgs^  e) {
 	}
 }
 
-void MainForm::tbLootInterval_TextChanged(Object^  sender, EventArgs^  e) {
+void MainForm::tbLootDelay_TextChanged(Object^  sender, EventArgs^  e) {
 	if (GlobalRefs::macroLoot != nullptr) {
-		if (String::IsNullOrWhiteSpace(tbLootInterval->Text)) {
-			MessageBox::Show("Error: Loot Interval textbox cannot be empty");
+		if (String::IsNullOrWhiteSpace(tbLootDelay->Text)) {
+			MessageBox::Show("Error: Loot Delay textbox cannot be empty");
 			return;
 		}
-		GlobalRefs::macroLoot->delay = Convert::ToUInt32(tbLootInterval->Text);
+		GlobalRefs::macroLoot->delay = Convert::ToUInt32(tbLootDelay->Text);
 	}
 }
 
@@ -722,12 +722,12 @@ void MainForm::comboLootKey_SelectedIndexChanged(Object^  sender, EventArgs^  e)
 
 #pragma region Auto Buffs
 void MainForm::bBuffAdd_Click(Object^  sender, EventArgs^  e) {
-	if(String::IsNullOrWhiteSpace(tbBuffInterval->Text)) {
-		MessageBox::Show("Error: Buff Interval textbox cannot be empty");
+	if(String::IsNullOrWhiteSpace(tbBuffDelay->Text)) {
+		MessageBox::Show("Error: Buff Delay textbox cannot be empty");
 		return;
 	}
-	ListViewItem^ lvi = gcnew ListViewItem(gcnew array<String^>{tbBuffName->Text, comboBuffKey->Text, tbBuffInterval->Text});
-	lvi->Tag = gcnew Macro(keyCollection[comboBuffKey->SelectedIndex], Convert::ToUInt32(tbBuffInterval->Text)*1000, MacroType::BUFFMACRO);
+	ListViewItem^ lvi = gcnew ListViewItem(gcnew array<String^>{tbBuffName->Text, comboBuffKey->Text, tbBuffDelay->Text});
+	lvi->Tag = gcnew Macro(keyCollection[comboBuffKey->SelectedIndex], Convert::ToUInt32(tbBuffDelay->Text)*1000, MacroType::BUFFMACRO);
 	lvi->Checked = true;
 	lvBuff->Items->Add(lvi);
 }
@@ -769,7 +769,7 @@ void MainForm::lvBuff_ItemChecked(Object^  sender, Windows::Forms::ItemCheckedEv
 	macro->Toggle(e->Item->Checked);
 }
 
-void MainForm::tbBuffInterval_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^  e) {
+void MainForm::tbBuffDelay_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^  e) {
 	if (!isKeyValid(sender, e, false)) e->Handled = true; //If key is not valid, do nothing and indicate that it has been handled
 }
 #pragma endregion
@@ -1478,7 +1478,7 @@ void KamiLoop() {
 			if(ReadPointer(DropPoolBase, OFS_ItemCount) > Convert::ToUInt32(MainForm::TheInstance->tbKamiLootItem->Text)) {
 				if (!GlobalRefs::isChangingField && !GlobalRefs::isMapRushing) {}
 					Teleport(Assembly::ItemX, Assembly::ItemY + 10);
-				Sleep(Convert::ToUInt32(MainForm::TheInstance->tbKamiLootInterval->Text));
+				Sleep(Convert::ToUInt32(MainForm::TheInstance->tbKamiLootDelay->Text));
 			}
 			else if (ReadPointer(MobPoolBase, OFS_MobCount) > Convert::ToUInt32(MainForm::TheInstance->tbKamiMob->Text)) {
 				POINT telePoint;
@@ -1488,7 +1488,7 @@ void KamiLoop() {
 				if (!GlobalRefs::isChangingField && !GlobalRefs::isMapRushing)
 					Teleport(telePoint);
 
-				Sleep(Convert::ToUInt32(MainForm::TheInstance->tbKamiInterval->Text));
+				Sleep(Convert::ToUInt32(MainForm::TheInstance->tbKamiDelay->Text));
 			}
 		}
 		else if (GlobalRefs::bKami) {
@@ -1500,14 +1500,14 @@ void KamiLoop() {
 				if (!GlobalRefs::isChangingField && !GlobalRefs::isMapRushing)
 					Teleport(telePoint);
 			}
-			Sleep(Convert::ToUInt32(MainForm::TheInstance->tbKamiInterval->Text));
+			Sleep(Convert::ToUInt32(MainForm::TheInstance->tbKamiDelay->Text));
 		}
 		else if (GlobalRefs::bKamiLoot) {
 			if (ReadPointer(DropPoolBase, OFS_ItemCount) > Convert::ToUInt32(MainForm::TheInstance->tbKamiLootItem->Text)) {
 				if (!GlobalRefs::isChangingField && !GlobalRefs::isMapRushing) {}
 					Teleport(Assembly::ItemX, Assembly::ItemY+10); //MessageBox::Show("ItemX: " + Assembly::ItemX.ToString() + " ItemY: " + Assembly::ItemY.ToString());
 			}
-			Sleep(Convert::ToUInt32(MainForm::TheInstance->tbKamiLootInterval->Text));
+			Sleep(Convert::ToUInt32(MainForm::TheInstance->tbKamiLootDelay->Text));
 		}
 	}
 	ExitThread(0);
@@ -1517,7 +1517,7 @@ void MainForm::cbKami_CheckedChanged(System::Object^  sender, System::EventArgs^
 	if(this->cbKami->Checked) {
 		tbKamiX->Enabled = false;
 		tbKamiY->Enabled = false;
-		tbKamiInterval->Enabled = false;
+		tbKamiDelay->Enabled = false;
 		tbKamiMob->Enabled = false;
 		GlobalRefs::bKami = true;
 		if(!GlobalRefs::bKamiLoot)
@@ -1527,14 +1527,14 @@ void MainForm::cbKami_CheckedChanged(System::Object^  sender, System::EventArgs^
 		GlobalRefs::bKami = false;
 		tbKamiX->Enabled = true;
 		tbKamiY->Enabled = true;
-		tbKamiInterval->Enabled = true;
+		tbKamiDelay->Enabled = true;
 		tbKamiMob->Enabled = true;
 	}
 }
 
 void MainForm::cbKamiLoot_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
 	if (this->cbKamiLoot->Checked) {
-		tbKamiLootInterval->Enabled = false;
+		tbKamiLootDelay->Enabled = false;
 		tbKamiLootItem->Enabled = false;
 		GlobalRefs::bKamiLoot = true;
 		cbLoot->Checked = true; //Enable Auto Loot (Required for call to PtInRect)
@@ -1546,7 +1546,7 @@ void MainForm::cbKamiLoot_CheckedChanged(System::Object^  sender, System::EventA
 		GlobalRefs::bKamiLoot = false;
 		cbLoot->Checked = false; //Disable Auto Loot 
 		*(ULONG*)PtInRectAddr = (ULONG)PtInRect;
-		tbKamiLootInterval->Enabled = true;
+		tbKamiLootDelay->Enabled = true;
 		tbKamiLootItem->Enabled = true;
 	}
 }
@@ -1559,7 +1559,7 @@ void MainForm::tbKamiY_KeyPress(Object^  sender, Windows::Forms::KeyPressEventAr
 	if (!isKeyValid(sender, e, true)) e->Handled = true; //If key is not valid, do nothing and indicate that it has been handled
 }
 
-void MainForm::tbKamiInterval_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^  e) {
+void MainForm::tbKamiDelay_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^  e) {
 	if (!isKeyValid(sender, e, false)) e->Handled = true; //If key is not valid, do nothing and indicate that it has been handled
 }
 
@@ -1567,7 +1567,7 @@ void MainForm::tbKamiMob_KeyPress(Object^  sender, Windows::Forms::KeyPressEvent
 	if (!isKeyValid(sender, e, false)) e->Handled = true; //If key is not valid, do nothing and indicate that it has been handled
 }
 
-void MainForm::tbKamiLootInterval_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^  e) {
+void MainForm::tbKamiLootDelay_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^  e) {
 	if (!isKeyValid(sender, e, false)) e->Handled = true; //If key is not valid, do nothing and indicate that it has been handled
 }
 
