@@ -454,18 +454,24 @@ namespace Hooks {
 		return SetHook(enable, reinterpret_cast<void**>(&CUserLocal__Update), hook);
 	}
 
-	bool ChangeChannel(int channel) {
-		typedef int(__stdcall *pfnCField__SendTransferChannelRequest)(int nTargetChannel); // Changes Channel
-		static auto CField__SendTransferChannelRequest = reinterpret_cast<pfnCField__SendTransferChannelRequest>(ccAddr);
+                bool ChangeChannel(int channel) {
+                        typedef int(__stdcall *pfnCField__SendTransferChannelRequest)(int nTargetChannel); // Changes Channel
+                        static auto CField__SendTransferChannelRequest = reinterpret_cast<pfnCField__SendTransferChannelRequest>(ccAddr);
 
-		if(*reinterpret_cast<void**>(ServerBase) != nullptr && !ReadPointerSignedInt(UIMiniMapBase, OFS_MapID) == 0) {
-			WritePointer(UserLocalBase, OFS_Breath, 0); //Set Breath Value to 0
-			CField__SendTransferChannelRequest(channel);
-			return true;
-		}
+                        if (channel <= 0) return false;
 
-		return false;
-	}
+                        // The in-game UI labels channels starting at 1, but the engine expects
+                        // a zero-based channel index on the wire, so translate before sending.
+                        int serverChannelIndex = channel - 1;
+
+                        if(*reinterpret_cast<void**>(ServerBase) != nullptr && !ReadPointerSignedInt(UIMiniMapBase, OFS_MapID) == 0) {
+                                WritePointer(UserLocalBase, OFS_Breath, 0); //Set Breath Value to 0
+                                CField__SendTransferChannelRequest(serverChannelIndex);
+                                return true;
+                        }
+
+                        return false;
+                }
 
 	bool CLogin__OnRecommendWorldMessage_Hook(bool enable) {
 		typedef void(__stdcall *pfnCLogin__OnRecommendWorldMessage)(PVOID, PVOID);

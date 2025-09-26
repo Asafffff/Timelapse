@@ -461,11 +461,13 @@ void SendLoginPacket(String^ username, String^ password) {
 }
 
 void SendCharListRequestPacket(int world, int channel) {
-	String^ packet = "";
-	writeBytes(packet, gcnew array<BYTE>{0x05, 0x00}); //Character List Request OpCode
-	writeByte(packet, 0x02); //Unknown byte
-	writeByte(packet, world); //World
-	writeByte(packet, channel); //Channel
+        if (channel <= 0) return;
+        String^ packet = "";
+        writeBytes(packet, gcnew array<BYTE>{0x05, 0x00}); //Character List Request OpCode
+        writeByte(packet, 0x02); //Unknown byte
+        writeByte(packet, world); //World
+        // UI selections are 1-based; adjust to the server's zero-based channel index.
+        writeByte(packet, channel - 1); //Channel
 	writeBytes(packet, gcnew array<BYTE>{0x7F, 0x00, 0x00, 0x01}); //Unknown bytes
 	SendPacket(packet);
 }
@@ -502,9 +504,9 @@ void AutoLogin() {
 		SendLoginPacket(usernameStr, passwordStr);
 		Sleep(2000);
 
-		int world = MainForm::TheInstance->comboAutoLoginWorld->SelectedIndex;
-		int channel = MainForm::TheInstance->comboAutoLoginChannel->SelectedIndex; 
-		SendCharListRequestPacket(world, channel);
+			int world = MainForm::TheInstance->comboAutoLoginWorld->SelectedIndex;
+			int channel = MainForm::TheInstance->comboAutoLoginChannel->SelectedIndex + 1;
+			SendCharListRequestPacket(world, channel);
 		Sleep(2000);
 
 		int character = MainForm::TheInstance->comboAutoLoginCharacter->SelectedIndex + 1;
@@ -798,23 +800,32 @@ void CallCSFunc() {
 
 void _stdcall AutoCC(int toChannel) {
 	int channel;
+	int channelCount = MainForm::TheInstance->comboChannelKey->Items->Count;
 	//List<int> excludedChannels = {};
-	// read string from settings	
+	// read string from settings
 	//String excludedChannelsText = MainForm::TheInstance->tbCSDelay->Text;
 	//int i;
 	//for (i=0, i<sizeof(excludedChannelsText), i++)
 	// parse string by comma into excludedChanList
 	//String firstchar = excludedChannelsText[1];
 
-	if (toChannel == -1) channel = rand() % 19;
+	if (toChannel == -1) {
+		if (channelCount <= 0) return;
+		channel = (rand() % channelCount) + 1;
+	}
 	else channel = toChannel;
 
-	if (MainForm::TheInstance->rbPacket->Checked)
-		SendPacket(gcnew String("27 00 " + channel.ToString("X2") + " ** ** ** 00")); //Send Auto CC Packet
+	if (channel <= 0) return;
+	if (channelCount > 0 && channel > channelCount) return;
+
+        int serverChannelIndex = channel - 1;
+
+        if (MainForm::TheInstance->rbPacket->Checked)
+                SendPacket(gcnew String("27 00 " + serverChannelIndex.ToString("X2") + " ** ** ** 00")); //Send Auto CC Packet
 	else
 		Hooks::ChangeChannel(channel); //CallCCFunc(channel); //Call Auto CC Function
 
-	Sleep(200); 
+	Sleep(200);
 }
 
 void _stdcall AutoCS() {
@@ -890,7 +901,7 @@ void MainForm::bCC_Click(Object^  sender, EventArgs^  e) {
 	if (!GlobalRefs::isMapRushing && !GlobalRefs::isChangingField) {
 		GlobalRefs::isChangingField = true;
 		WritePointer(UserLocalBase, OFS_Breath, 0);
-		AutoCC(this->comboChannelKey->SelectedIndex);
+		AutoCC(this->comboChannelKey->SelectedIndex + 1);
 		GlobalRefs::isChangingField = false;
 	}
 }
@@ -2758,7 +2769,7 @@ static void mapRush(int destMapID) {
 	int remainingMapCount = mapPath->size(), delay = Convert::ToInt32(MainForm::TheInstance->tbMapRusherDelay->Text);
 	if (delay <= 0 || delay > 999999) delay = 500;
 	toggleFastMapRushHacks(true); //Enables No Map Background, Fade, Tiles, & Objects for quicker map rush
-	int oldChannel = ReadPointer(ServerBase, OFS_Channel);
+	int oldChannel = ReadPointer(ServerBase, OFS_Channel) + 1;
 
 	std::vector<SpawnControlData*> *oldSpawnControl = Assembly::spawnControl; //Save old spawn control list
 	Assembly::spawnControl = new std::vector<SpawnControlData*>(); //Create a new spawn control list for map rushing
