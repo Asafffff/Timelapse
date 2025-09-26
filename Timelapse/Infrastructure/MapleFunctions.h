@@ -145,24 +145,24 @@ namespace PointerFuncs {
 	}
 
 	//Retrieve Left Wall coord
-	static String^ getMapLeftWall() {
-		return ReadPointerSignedInt(CWvsPhysicalSpace2DBase, OFS_LeftWall).ToString();
-	}
+        static int getMapLeftWall() {
+                return ReadPointerSignedInt(CWvsPhysicalSpace2DBase, OFS_LeftWall);
+        }
 
-	//Retrieve Right Wall coord
-	static String^ getMapRightWall() {
-		return ReadPointerSignedInt(CWvsPhysicalSpace2DBase, OFS_RightWall).ToString();
-	}
+        //Retrieve Right Wall coord
+        static int getMapRightWall() {
+                return ReadPointerSignedInt(CWvsPhysicalSpace2DBase, OFS_RightWall);
+        }
 
-	//Retrieve Top Wall coord
-	static String^ getMapTopWall() {
-		return ReadPointerSignedInt(CWvsPhysicalSpace2DBase, OFS_TopWall).ToString();
-	}
+        //Retrieve Top Wall coord
+        static int getMapTopWall() {
+                return ReadPointerSignedInt(CWvsPhysicalSpace2DBase, OFS_TopWall);
+        }
 
-	//Retrieve Bottom Wall coord
-	static String^ getMapBottomWall() {
-		return ReadPointerSignedInt(CWvsPhysicalSpace2DBase, OFS_BottomWall).ToString();
-	}
+        //Retrieve Bottom Wall coord
+        static int getMapBottomWall() {
+                return ReadPointerSignedInt(CWvsPhysicalSpace2DBase, OFS_BottomWall);
+        }
 
 	//Retrieve Char Name
 	static String^ getCharName() {
@@ -216,94 +216,94 @@ namespace PointerFuncs {
 	}
 
 	//Retrieve Channel
-	static String^ getChannel() {
-		return (ReadPointer(ServerBase, OFS_Channel) + 1).ToString();
-	}
+        static int getChannel() {
+                return ReadPointer(ServerBase, OFS_Channel) + 1;
+        }
 
-	//Retrieve MapID
-	static String^ getMapID() {
-		return ReadPointerSignedInt(UIMiniMapBase, OFS_MapID).ToString();
-	}
+        //Retrieve MapID
+        static int getMapID() {
+                return ReadPointerSignedInt(UIMiniMapBase, OFS_MapID);
+        }
 
-	//Retrieve Char Position
-	static String^ getCharPos() {
-		return "(" + ReadPointerSignedInt(UserLocalBase, OFS_CharX).ToString() + ", " + ReadPointerSignedInt(UserLocalBase, OFS_CharY).ToString() + ")";
-	}
+        //Retrieve Char Position
+        static System::Drawing::Point getCharPos() {
+                return System::Drawing::Point(getCharPosX(), getCharPosY());
+        }
 
-	//Retrieve Char X Position
-	static String^ getCharPosX() {
-		return ReadPointerSignedInt(UserLocalBase, OFS_CharX).ToString();
-	}
+        //Retrieve Char X Position
+        static int getCharPosX() {
+                return ReadPointerSignedInt(UserLocalBase, OFS_CharX);
+        }
 
-	//Retrieve Char Y Position
-	static String^ getCharPosY() {
-		return ReadPointerSignedInt(UserLocalBase, OFS_CharY).ToString();
-	}
+        //Retrieve Char Y Position
+        static int getCharPosY() {
+                return ReadPointerSignedInt(UserLocalBase, OFS_CharY);
+        }
 
-	//Retrieve Mouse Position
-	static String^ getMousePos() {
-		return "(" + ReadMultiPointerSigned(InputBase, 2, OFS_MouseLocation, OFS_MouseX).ToString() + ", " + ReadMultiPointerSigned(InputBase, 2, OFS_MouseLocation, OFS_MouseY).ToString() + ")";
-	}
+        //Retrieve Mouse Position
+        static System::Drawing::Point getMousePos() {
+                return System::Drawing::Point(getMousePosX(), getMousePosY());
+        }
 
-	//Retrieve Mouse X Position
-	static String^ getMousePosX() {
-		return ReadMultiPointerSigned(InputBase, 2, OFS_MouseLocation, OFS_MouseX).ToString();
-	}
+        //Retrieve Mouse X Position
+        static int getMousePosX() {
+                return static_cast<int>(ReadMultiPointerSigned(InputBase, 2, OFS_MouseLocation, OFS_MouseX));
+        }
 
-	//Retrieve Mouse Y Position
-	static String^ getMousePosY() {
-		return ReadMultiPointerSigned(InputBase, 2, OFS_MouseLocation, OFS_MouseY).ToString();
-	}
+        //Retrieve Mouse Y Position
+        static int getMousePosY() {
+                return static_cast<int>(ReadMultiPointerSigned(InputBase, 2, OFS_MouseLocation, OFS_MouseY));
+        }
 
-	//Retrieve Char Animation
-	static String^ getCharAnimation() {
-		return ReadPointerSignedInt(UserLocalBase, OFS_CharAnimation).ToString();
-	}
+        //Retrieve Char Animation
+        static int getCharAnimation() {
+                return ReadPointerSignedInt(UserLocalBase, OFS_CharAnimation);
+        }
 
-	//Retrieve Char Foothold
-	static String^ getCharFoothold() {
-		return ReadMultiPointerSigned(UserLocalBase, OFS_pID, OFS_Foothold).ToString();
-	}
+        //Retrieve Char Foothold
+        static int getCharFoothold() {
+                return static_cast<int>(ReadMultiPointerSigned(UserLocalBase, OFS_pID, OFS_Foothold));
+        }
 
-	//Retrieve Attack Count
-	static String^ getAttackCount() {
-		return ReadPointerSignedInt(UserLocalBase, OFS_AttackCount).ToString();
-	}
+        //Retrieve Attack Count
+        static int getAttackCount() {
+                return ReadPointerSignedInt(UserLocalBase, OFS_AttackCount);
+        }
 
-	//Retrieve Buff Count
-	static String^ getBuffCount() {
-		return (*(ULONG*)OFS_BuffCount).ToString();
-	}
+        //Retrieve Buff Count
+        static int getBuffCount() {
+                return static_cast<int>(*(ULONG*)OFS_BuffCount);
+        }
 
-	//Retrieve Breath Count
-	static String^ getBreathCount() {
-		return ReadPointerSignedInt(UserLocalBase, OFS_Breath).ToString();
-	}
+        //Retrieve Breath Count
+        static int getBreathCount() {
+                return ReadPointerSignedInt(UserLocalBase, OFS_Breath);
+        }
 
-	//Retrieve People Count
-	static String^ getPeopleCount() {
-		return ReadPointerSignedInt(UserPoolBase, OFS_PeopleCount).ToString();
-	}
+        //Retrieve People Count
+        static int getPeopleCount() {
+                return ReadPointerSignedInt(UserPoolBase, OFS_PeopleCount);
+        }
 
-	//Retrieve Mob Count
-	static String^ getMobCount() {
-		return ReadPointerSignedInt(MobPoolBase, OFS_MobCount).ToString();
-	}
+        //Retrieve Mob Count
+        static int getMobCount() {
+                return ReadPointerSignedInt(MobPoolBase, OFS_MobCount);
+        }
 
-	//Retrieve Item Count
-	static String^ getItemCount() {
-		return ReadPointerSignedInt(DropPoolBase, OFS_ItemCount).ToString();
-	}
+        //Retrieve Item Count
+        static int getItemCount() {
+                return ReadPointerSignedInt(DropPoolBase, OFS_ItemCount);
+        }
 
-	//Retrieve Portal Count
-	static String^ getPortalCount() {
-		return ReadPointerSignedInt(PortalListBase, OFS_PortalCount).ToString();
-	}
+        //Retrieve Portal Count
+        static int getPortalCount() {
+                return ReadPointerSignedInt(PortalListBase, OFS_PortalCount);
+        }
 
-	//Retrieve NPC Count
-	static String^ getNPCCount() {
-		return ReadPointerSignedInt(NPCPoolBase, OFS_NPCCount).ToString();
-	}
+        //Retrieve NPC Count
+        static int getNPCCount() {
+                return ReadPointerSignedInt(NPCPoolBase, OFS_NPCCount);
+        }
 }
 
 namespace HelperFuncs {
@@ -323,17 +323,17 @@ namespace HelperFuncs {
 
 	static bool IsInGame()
 	{
-		const int mapID = Convert::ToInt32(PointerFuncs::getMapID());
+                const int mapID = PointerFuncs::getMapID();
 
-		if (!mapID == 0) //&& !PointerFuncs::getCharName()->Equals("CharName")
-			return true;
+                if (mapID != 0) //&& !PointerFuncs::getCharName()->Equals("CharName")
+                        return true;
 
 		return false;
 	}
 
 	static bool ValidToAttack()
 	{
-		const int attCnt = Convert::ToInt32(PointerFuncs::getAttackCount());
+                const int attCnt = PointerFuncs::getAttackCount();
 
 		// check for weapon and ammo
 		if (!(attCnt > 99) && IsInGame()) //!UsingBuff
@@ -344,7 +344,7 @@ namespace HelperFuncs {
 
 	static bool ValidToLoot()
 	{
-		const int pplCnt = Convert::ToInt32(PointerFuncs::getPeopleCount());
+                const int pplCnt = PointerFuncs::getPeopleCount();
 
 		if (!(pplCnt > 0) && IsInGame())
 			return true;
@@ -355,7 +355,7 @@ namespace HelperFuncs {
 	// Check if item count > 50 and AutoLoot is Checked
 	static bool IsInventoryFull()
 	{
-		const int itemCnt = Convert::ToInt32(PointerFuncs::getItemCount());
+                const int itemCnt = PointerFuncs::getItemCount();
 
 		if (itemCnt > 50) // TODO: check if looting
 			return true;
