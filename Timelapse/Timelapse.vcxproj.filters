@@ -5,9 +5,15 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="Source Files\Native">
+      <UniqueIdentifier>{CC1FDBFD-2A17-44F6-8F0B-CDF70B87BC56}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Header Files">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Native">
+      <UniqueIdentifier>{2208F034-E3A7-4E8D-B8E5-F28524759E41}</UniqueIdentifier>
     </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
@@ -41,6 +47,9 @@
     </ClInclude>
     <ClInclude Include="Log.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Native\PacketLogQueue.h">
+      <Filter>Header Files\Native</Filter>
     </ClInclude>
     <ClInclude Include="Mouse.h">
       <Filter>Header Files</Filter>
@@ -82,6 +91,9 @@
     </ClCompile>
     <ClCompile Include="Inventory.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Native\PacketLogQueue.cpp">
+      <Filter>Source Files\Native</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

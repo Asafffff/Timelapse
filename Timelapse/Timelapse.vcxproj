@@ -140,6 +140,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Inventory.cpp" />
+    <ClCompile Include="Native\PacketLogQueue.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="MainForm.cpp" />
     <ClCompile Include="Mouse.cpp" />
@@ -152,6 +153,7 @@
     <ClInclude Include="GeneralFunctions.h" />
     <ClInclude Include="Inventory.h" />
     <ClInclude Include="Log.h" />
+    <ClInclude Include="Native\PacketLogQueue.h" />
     <ClInclude Include="Macro.h" />
     <ClInclude Include="MapleFunctions.h" />
     <ClInclude Include="Memory.h" />

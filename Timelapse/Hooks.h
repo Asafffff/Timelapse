@@ -4,8 +4,9 @@
 #include "GeneralFunctions.h"
 #include "Packet.h"
 #include "detours.h"
-#include <queue>
+#include "Native/PacketLogQueue.h"
 #include "Addresses.h"
+#include <vector>
 
 #pragma comment(lib, "detours.lib")
 #define CodeCave(name) static void __declspec(naked) ##name() { _asm
@@ -36,7 +37,6 @@ bool isMobLoggingEnabled = false, isMobFilterEnabled = false, isMobFilterWhiteLi
 ULONG itemLogged = 0, itemFilterMesos = 0, mobLogged = 0;
 static std::vector<ULONG> *itemList = new std::vector<ULONG>(), *mobList = new std::vector<ULONG>();
 static std::vector<SpawnControlData*> *spawnControl = new std::vector<SpawnControlData*>();
-static std::vector<COutPacket> *sendPacketLogQueue = new std::vector<COutPacket>();
 SendPacketData *sendPacketData;
 ULONG dupeXFoothold = 0;
 
@@ -134,25 +134,11 @@ inline bool __stdcall shouldMobBeFiltered() {
 }
 
 
-static std::queue<USHORT> *sendPacketQueue = new std::queue<USHORT>();
 inline void __stdcall addSendPacket() {
         if (sendPacketData == nullptr || sendPacketData->packet == nullptr)
                 return;
 
-        COutPacket *oldPacket = sendPacketData->packet;
-        USHORT header = 0;
-
-        if (oldPacket->Header != nullptr) {
-                header = *oldPacket->Header;
-        }
-        else if (oldPacket->Data != nullptr && oldPacket->Size >= sizeof(USHORT)) {
-                header = *reinterpret_cast<PUSHORT>(oldPacket->Data);
-        }
-        else {
-                return;
-        }
-
-        sendPacketQueue->push(header);
+        Timelapse::Native::EnqueueSendPacket(*sendPacketData->packet);
 }
 
 #pragma unmanaged

@@ -9,6 +9,7 @@
 #include "Settings.h"
 #include "Log.h"
 #include "Hooks.h"
+#include "Native/PacketLogQueue.h"
 
 [assembly:System::Diagnostics::DebuggableAttribute(true, true)]; //For debugging purposes
 
@@ -2125,17 +2126,22 @@ void MainForm::tbSendSpamDelay_KeyPress(Object^  sender, Windows::Forms::KeyPres
 }
 
 void MainForm::bSendLog_Click(System::Object^  sender, System::EventArgs^  e) {
-	if(bSendLog->Text->Equals("Enable Log")) {
-		bSendLog->Text = "Disable Log";
-		GlobalRefs::bSendPacketLog = true;
-		this->tPacketLog->Enabled = true;
-		Jump(cOutPacketAddr, Assembly::SendPacketLogHook, 0);
-	}
-	else {
-		bSendLog->Text = "Enable Log";
-		GlobalRefs::bSendPacketLog = false;
-		WriteMemory(cOutPacketAddr, 5, 0xB8, 0x6C, 0x12, 0xA8, 0x00);
-	}
+        if(bSendLog->Text->Equals("Enable Log")) {
+                bSendLog->Text = "Disable Log";
+                Timelapse::Native::ClearSendPackets();
+                if (this->tvSendPackets != nullptr) {
+                        this->tvSendPackets->Nodes->Clear();
+                }
+                GlobalRefs::bSendPacketLog = true;
+                this->tPacketLog->Enabled = true;
+                Jump(cOutPacketAddr, Assembly::SendPacketLogHook, 0);
+        }
+        else {
+                bSendLog->Text = "Enable Log";
+                GlobalRefs::bSendPacketLog = false;
+                Timelapse::Native::ClearSendPackets();
+                WriteMemory(cOutPacketAddr, 5, 0xB8, 0x6C, 0x12, 0xA8, 0x00);
+        }
 }
 #pragma endregion
 
@@ -2308,56 +2314,42 @@ System::Void MainForm::cbAP_CheckedChanged(System::Object^ sender, System::Event
 #pragma endregion
 
 void MainForm::tPacketLog_Tick(System::Object^  sender, System::EventArgs^  e) {
-	if (!GlobalRefs::bSendPacketLog && !GlobalRefs::bRecvPacketLog)
-		this->tPacketLog->Enabled = false;
-
-	//std::vector<COutPacket*> *sentPacketQueue = Assembly::sendPacketLogQueue;
-        if (GlobalRefs::bSendPacketLog && !Assembly::sendPacketQueue->empty()) {
-                USHORT header = Assembly::sendPacketQueue->front();
-                Assembly::sendPacketQueue->pop();
-
-                String^ packetHeader = "";
-                writeUnsignedShort(packetHeader, header);
-                Log::WriteLineToConsole(packetHeader);
+        if (!GlobalRefs::bSendPacketLog && !GlobalRefs::bRecvPacketLog) {
+                this->tPacketLog->Enabled = false;
+                return;
         }
 
-	/*if(!GlobalRefs::bSendPacketLog) {
-		for (std::vector<COutPacket>::const_iterator i = Assembly::sendPacketLogQueue->begin(); i != Assembly::sendPacketLogQueue->end(); ++i) {
-			COutPacket packet = *i;
+        if (GlobalRefs::bSendPacketLog) {
+                Timelapse::Native::PacketLogEntry entry;
+                while (Timelapse::Native::TryDequeueSendPacket(entry)) {
+                        String^ packetHeaderBytes = "";
+                        writeUnsignedShort(packetHeaderBytes, entry.header);
+                        packetHeaderBytes = packetHeaderBytes->Trim();
 
-			String^ packetHeader = "";
-			writeUnsignedShort(packetHeader, *packet.Header);
-			Log::WriteLineToConsole(packetHeader);
+                        Log::WriteLineToConsole("SEND " + packetHeaderBytes);
 
-			/*String^ packetData = "";
-			BYTE* packetBytes = packet->Data;
-			int packetSize = packet->Size - 2;
-			for (int i = 0; i < packetSize; i++)
-				writeByte(packetData, packetBytes[i]);#1#
+                        if (this->tvSendPackets != nullptr) {
+                                String^ packetData = "";
+                                for (const unsigned char byte : entry.payload) {
+                                        writeByte(packetData, byte);
+                                }
+                                packetData = packetData->Trim();
 
+                                TreeNode^ headerNode = gcnew TreeNode(packetHeaderBytes);
+                                if (!String::IsNullOrEmpty(packetData)) {
+                                        headerNode->Nodes->Add(gcnew TreeNode(packetData));
+                                }
 
-			/*Windows::Forms::TreeNode^ headerNode = gcnew Windows::Forms::TreeNode(packetHeader);
-			headerNode->Name = packetHeader;
-
-			Windows::Forms::TreeNode^ packetNode = gcnew Windows::Forms::TreeNode(packetData);
-			packetNode->Name = packetData;
-
-			Timelapse::MainForm::TheInstance->tvSendPackets->Nodes->Add(headerNode);#1#
-
-			/*if(Timelapse::MainForm::TheInstance->tvSendPackets->Nodes->ContainsKey(packetHeader)) {
-				//Header exists in tree
-			}
-			else {
-				Windows::Forms::TreeNode^ headerNode = gcnew Windows::Forms::TreeNode(packetHeader);
-				headerNode->Name = packetHeader;
-				//headerNode->Nodes->Add(packetNode);
-				Timelapse::MainForm::TheInstance->tvSendPackets->BeginUpdate();
-				Timelapse::MainForm::TheInstance->tvSendPackets->Nodes->Add(headerNode);
-				Timelapse::MainForm::TheInstance->tvSendPackets->EndUpdate();
-			}#1#
-		}
-		Assembly::sendPacketLogQueue->clear();
-	}*/
+                                this->tvSendPackets->BeginUpdate();
+                                this->tvSendPackets->Nodes->Insert(0, headerNode);
+                                const int MAX_PACKET_NODES = 200;
+                                while (this->tvSendPackets->Nodes->Count > MAX_PACKET_NODES) {
+                                        this->tvSendPackets->Nodes->RemoveAt(this->tvSendPackets->Nodes->Count - 1);
+                                }
+                                this->tvSendPackets->EndUpdate();
+                        }
+                }
+        }
 }
 #pragma endregion
 
