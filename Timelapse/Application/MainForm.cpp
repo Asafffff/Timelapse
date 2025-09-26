@@ -986,39 +986,55 @@ void MainForm::cbBlinkGodmode_CheckedChanged(Object^  sender, EventArgs^  e) {
 }
 
 void ClickTeleport() {
-	while (GlobalRefs::bClickTeleport) {
-		if (ReadPointer(InputBase, OFS_MouseAnimation) == 12)
-			Teleport(ReadMultiPointerSigned(InputBase, 2, OFS_MouseLocation, OFS_MouseX), ReadMultiPointerSigned(InputBase, 2, OFS_MouseLocation, OFS_MouseY));
-		Sleep(Convert::ToUInt32(MainForm::TheInstance->tbClickTeleport->Text));
-	}
-	ExitThread(0);
+        while (GlobalRefs::bClickTeleport) {
+                if (ReadPointer(InputBase, OFS_MouseAnimation) == 12)
+                        Teleport(ReadMultiPointerSigned(InputBase, 2, OFS_MouseLocation, OFS_MouseX), ReadMultiPointerSigned(InputBase, 2, OFS_MouseLocation, OFS_MouseY));
+                System::UInt32 delay;
+                if (!System::UInt32::TryParse(MainForm::TheInstance->tbClickTeleport->Text, delay))
+                        delay = 100; //Fallback to default delay if textbox is empty or invalid
+                Sleep(delay);
+        }
+        ExitThread(0);
 }
 
 void MouseTeleport() {
-	while (GlobalRefs::bMouseTeleport) {
-		if (ReadPointer(InputBase, OFS_MouseAnimation) == 00)
-			Teleport(ReadMultiPointerSigned(InputBase, 2, OFS_MouseLocation, OFS_MouseX), ReadMultiPointerSigned(InputBase, 2, OFS_MouseLocation, OFS_MouseY));
-		Sleep(Convert::ToUInt32(MainForm::TheInstance->tbMouseTeleport->Text));
-	}
-	ExitThread(0);
+        while (GlobalRefs::bMouseTeleport) {
+                if (ReadPointer(InputBase, OFS_MouseAnimation) == 00)
+                        Teleport(ReadMultiPointerSigned(InputBase, 2, OFS_MouseLocation, OFS_MouseX), ReadMultiPointerSigned(InputBase, 2, OFS_MouseLocation, OFS_MouseY));
+                System::UInt32 delay;
+                if (!System::UInt32::TryParse(MainForm::TheInstance->tbMouseTeleport->Text, delay))
+                        delay = 100; //Fallback to default delay if textbox is empty or invalid
+                Sleep(delay);
+        }
+        ExitThread(0);
 }
 
 void MainForm::cbClickTeleport_CheckedChanged(Object^  sender, EventArgs^  e) {
-	if (this->cbClickTeleport->Checked) {
-		GlobalRefs::bClickTeleport = true;
-		NewThread(ClickTeleport);
-	}
-	else
-		GlobalRefs::bClickTeleport = false;
+        if (this->cbClickTeleport->Checked) {
+                if (String::IsNullOrWhiteSpace(this->tbClickTeleport->Text)) {
+                        MessageBox::Show("Error: Click Teleport delay textbox cannot be empty");
+                        this->cbClickTeleport->Checked = false;
+                        return;
+                }
+                GlobalRefs::bClickTeleport = true;
+                NewThread(ClickTeleport);
+        }
+        else
+                GlobalRefs::bClickTeleport = false;
 }
- 
+
 void MainForm::cbMouseTeleport_CheckedChanged(Object^  sender, EventArgs^  e) {
-	if (this->cbMouseTeleport->Checked) {
-		GlobalRefs::bMouseTeleport = true;
-		NewThread(MouseTeleport);
-	}
-	else
-		GlobalRefs::bMouseTeleport = false;
+        if (this->cbMouseTeleport->Checked) {
+                if (String::IsNullOrWhiteSpace(this->tbMouseTeleport->Text)) {
+                        MessageBox::Show("Error: Mouse Teleport delay textbox cannot be empty");
+                        this->cbMouseTeleport->Checked = false;
+                        return;
+                }
+                GlobalRefs::bMouseTeleport = true;
+                NewThread(MouseTeleport);
+        }
+        else
+                GlobalRefs::bMouseTeleport = false;
 }
 
 void MainForm::tbClickTeleport_KeyPress(Object^  sender, Windows::Forms::KeyPressEventArgs^  e) {
@@ -1310,18 +1326,21 @@ void MainForm::cbNoWalkingFriction_CheckedChanged(System::Object^  sender, Syste
 #pragma region Hacks II Tab
 #pragma region Teleport
 void TeleportLoop() {
-	int index = 0;
-	while (GlobalRefs::bTeleport) {
-		if (index < MainForm::TheInstance->lvTeleport->Items->Count) {
-			Teleport(Convert::ToInt32(MainForm::TheInstance->lvTeleport->Items[index]->Text), Convert::ToInt32(MainForm::TheInstance->lvTeleport->Items[index]->SubItems[1]->Text));
-			index++;
-		}
-		else
-			index = 0;
+        int index = 0;
+        while (GlobalRefs::bTeleport) {
+                if (index < MainForm::TheInstance->lvTeleport->Items->Count) {
+                        Teleport(Convert::ToInt32(MainForm::TheInstance->lvTeleport->Items[index]->Text), Convert::ToInt32(MainForm::TheInstance->lvTeleport->Items[index]->SubItems[1]->Text));
+                        index++;
+                }
+                else
+                        index = 0;
 
-		Sleep(Convert::ToUInt32(MainForm::TheInstance->tbTeleportLoopDelay->Text));
-	}
-	ExitThread(0);
+                System::UInt32 delay;
+                if (!System::UInt32::TryParse(MainForm::TheInstance->tbTeleportLoopDelay->Text, delay))
+                        delay = 250; //Fallback to default delay if textbox is empty or invalid
+                Sleep(delay);
+        }
+        ExitThread(0);
 }
 
 void MainForm::bTeleportGetCurrentLocation_Click(Object^  sender, EventArgs^  e) {
@@ -1356,12 +1375,16 @@ void MainForm::lvTeleport_MouseDoubleClick(Object^  sender, Windows::Forms::Mous
 }
 
 void MainForm::bTeleportLoop_Click(Object^  sender, EventArgs^  e) {
-	if (!bTeleportLoop->Text->Equals("Stop Loop")) {
-		bTeleportLoop->Text = "Stop Loop";
-		bTeleportGetCurrentLocation->Enabled = false;
-		bTeleportAdd->Enabled = false;
-		bTeleportDelete->Enabled = false;
-		bTeleport->Enabled = false;
+        if (!bTeleportLoop->Text->Equals("Stop Loop")) {
+                if (String::IsNullOrWhiteSpace(tbTeleportLoopDelay->Text)) {
+                        MessageBox::Show("Error: Teleport Loop delay textbox cannot be empty");
+                        return;
+                }
+                bTeleportLoop->Text = "Stop Loop";
+                bTeleportGetCurrentLocation->Enabled = false;
+                bTeleportAdd->Enabled = false;
+                bTeleportDelete->Enabled = false;
+                bTeleport->Enabled = false;
 		lvTeleport->Enabled = false;
 		GlobalRefs::bTeleport = true;
 		NewThread(TeleportLoop);
