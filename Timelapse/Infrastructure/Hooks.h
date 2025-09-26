@@ -1,9 +1,9 @@
 #pragma once
-#include "Structs.h"
-#include "resource.h"
-#include "GeneralFunctions.h"
-#include "Packet.h"
-#include "detours.h"
+#include "../Core/Structs.h"
+#include "../Resources/resource.h"
+#include "../Utilities/GeneralFunctions.h"
+#include "../Core/Packet.h"
+#include "../Libraries/detours.h"
 #include <queue>
 #include "Addresses.h"
 

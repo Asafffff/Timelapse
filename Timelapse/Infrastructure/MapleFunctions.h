@@ -1,10 +1,13 @@
 #pragma once
 #include <Windows.h>
 #include <tchar.h>
-#include "memory.h"
+#include "Memory.h"
 #include "Hooks.h"
-#include "Packet.h"
-#include "Mouse.h"
+#include "../Core/Packet.h"
+#include "../Input/Mouse.h"
+#include "../Logging/Log.h"
+
+using Timelapse::Logging::Log;
 
 //Get MS Window Handle
 static HWND GetMSWindowHandle() {

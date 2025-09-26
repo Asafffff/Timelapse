@@ -3,9 +3,11 @@
 #include "MainForm.h"
 #include <Windows.h>
 #include <winuser.h>
-#include "Log.h"
-#include "MapleFunctions.h"
-#include "Addresses.h"
+#include "../Logging/Log.h"
+#include "../Infrastructure/MapleFunctions.h"
+#include "../Infrastructure/Addresses.h"
+
+using Timelapse::Logging::Log;
 
 bool DBG_Macro = false;
 enum class MacroType { LOOTMACRO = 1, ATTACKMACRO = 2, BUFFMACRO = 3, MPPOTMACRO = 4, HPPOTMACRO = 5};

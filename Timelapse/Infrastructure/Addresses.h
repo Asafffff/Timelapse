@@ -1,5 +1,5 @@
 #pragma once
-#include "Structs.h"
+#include "../Core/Structs.h"
 
 /*  
  *  Addresses defined here were found using the following programs: Cheat Engine, Hex-Rays IDA, ReClassEx

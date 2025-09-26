@@ -1,5 +1,7 @@
 #include "Settings.h"
-#include "Log.h"
+#include "../Logging/Log.h"
+
+using namespace Timelapse::Logging;
 
 using namespace Timelapse;
 using namespace System;
