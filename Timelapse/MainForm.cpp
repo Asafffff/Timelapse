@@ -2312,15 +2312,14 @@ void MainForm::tPacketLog_Tick(System::Object^  sender, System::EventArgs^  e) {
 		this->tPacketLog->Enabled = false;
 
 	//std::vector<COutPacket*> *sentPacketQueue = Assembly::sendPacketLogQueue;
-	if(GlobalRefs::bSendPacketLog && !Assembly::sendPacketQueue->empty()) {
-		COutPacket *packet = (COutPacket*)Assembly::sendPacketQueue->front();
-		
-		String^ packetHeader = "";
-		writeUnsignedShort(packetHeader, *packet->Header);
-		Log::WriteLineToConsole(packetHeader);
-		
-		Assembly::sendPacketQueue->pop();
-	}
+        if (GlobalRefs::bSendPacketLog && !Assembly::sendPacketQueue->empty()) {
+                USHORT header = Assembly::sendPacketQueue->front();
+                Assembly::sendPacketQueue->pop();
+
+                String^ packetHeader = "";
+                writeUnsignedShort(packetHeader, header);
+                Log::WriteLineToConsole(packetHeader);
+        }
 
 	/*if(!GlobalRefs::bSendPacketLog) {
 		for (std::vector<COutPacket>::const_iterator i = Assembly::sendPacketLogQueue->begin(); i != Assembly::sendPacketLogQueue->end(); ++i) {

@@ -38,17 +38,26 @@ String^ Log::GetLogPath() {
 	return LogsFilePath;
 }
 
- void Log::WriteLineToConsole(String^ str) {
-	if (String::IsNullOrEmpty(str)) return;
-	int const LOG_MAX_LINES = 200;
-	String^ strOut = gcnew String(str);
-	String^ timeNow = DateTime::Now.ToString("HH:mm::ss.fff");
-	String^ strToWrite = (timeNow + ": " + strOut);
+void Log::WriteLineToConsole(String^ str) {
+        if (String::IsNullOrEmpty(str)) return;
 
-	// add this line at the top of the log
-	MainForm::TheInstance->lbConsoleLog->Items->Insert(0, strToWrite);
-	// keep only a few lines in the log
-	while (MainForm::TheInstance->lbConsoleLog->Items->Count > LOG_MAX_LINES) {
-		MainForm::TheInstance->lbConsoleLog->Items->RemoveAt(MainForm::TheInstance->lbConsoleLog->Items->Count - 1);
-	}
+        MainForm^ mainForm = MainForm::TheInstance;
+        if (mainForm == nullptr || mainForm->lbConsoleLog == nullptr) return;
+
+        System::Windows::Forms::ListBox^ listBox = mainForm->lbConsoleLog;
+        if (listBox->InvokeRequired) {
+                listBox->BeginInvoke(gcnew System::Action<String^>(Log::WriteLineToConsole), gcnew array<Object^>{ str });
+                return;
+        }
+
+        int const LOG_MAX_LINES = 200;
+        String^ timeNow = DateTime::Now.ToString("HH:mm::ss.fff");
+        String^ strToWrite = timeNow + ": " + str;
+
+        // add this line at the top of the log
+        listBox->Items->Insert(0, strToWrite);
+        // keep only a few lines in the log
+        while (listBox->Items->Count > LOG_MAX_LINES) {
+                listBox->Items->RemoveAt(listBox->Items->Count - 1);
+        }
 }

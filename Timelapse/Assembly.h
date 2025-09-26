@@ -132,25 +132,25 @@ inline bool __stdcall shouldMobBeFiltered() {
 }
 
 
-static std::queue<COutPacket*> *sendPacketQueue = new std::queue<COutPacket*>();
+static std::queue<USHORT> *sendPacketQueue = new std::queue<USHORT>();
 inline void __stdcall addSendPacket() {
-	//void* packet = new COutPacket();
-	//memcpy((void*)packet, (void*)sendPacketData->packet, sizeof(COutPacket));
-	COutPacket *packet = new COutPacket();
-	COutPacket *oldPacket = sendPacketData->packet;
+        if (sendPacketData == nullptr || sendPacketData->packet == nullptr)
+                return;
 
-	packet->Loopback = oldPacket->Loopback;
-	UCHAR data = *oldPacket->Data;
-	//void unk = *oldPacket->Unk;
-	USHORT header = *oldPacket->Header;
+        COutPacket *oldPacket = sendPacketData->packet;
+        USHORT header = 0;
 
-	packet->Data = &data;
-	packet->Unk = oldPacket->Unk;
-	packet->Header = &header;
-	packet->Size = oldPacket->Size;
-	packet->Offset = oldPacket->Offset;
-	packet->EncryptedByShanda = oldPacket->EncryptedByShanda;
-	sendPacketQueue->push(packet);
+        if (oldPacket->Header != nullptr) {
+                header = *oldPacket->Header;
+        }
+        else if (oldPacket->Data != nullptr && oldPacket->Size >= sizeof(USHORT)) {
+                header = *reinterpret_cast<PUSHORT>(oldPacket->Data);
+        }
+        else {
+                return;
+        }
+
+        sendPacketQueue->push(header);
 }
 
 #pragma unmanaged
