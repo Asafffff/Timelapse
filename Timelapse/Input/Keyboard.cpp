@@ -97,9 +97,15 @@ Key_win::Key_win(WORD virtualKey) : virtualKey_(virtualKey) {
     if (GetKeyNameTextW(lParam << 16, name.data(), static_cast<int>(name.size()))) {
         int requiredLength = WideCharToMultiByte(CP_UTF8, 0, name.data(), -1, nullptr, 0, nullptr, nullptr);
         if (requiredLength > 0) {
-            std::string utf8Name(static_cast<size_t>(requiredLength - 1), '\0');
-            WideCharToMultiByte(CP_UTF8, 0, name.data(), -1, utf8Name.data(), requiredLength, nullptr, nullptr);
-            name_ = utf8Name;
+            std::string utf8Name(static_cast<size_t>(requiredLength), '\0');
+            int written = WideCharToMultiByte(CP_UTF8, 0, name.data(), -1, utf8Name.data(), requiredLength, nullptr, nullptr);
+            if (written > 0) {
+                utf8Name.resize(static_cast<size_t>(written - 1));
+                name_ = utf8Name;
+            } else {
+                std::cerr << "Cannot convert key name to UTF-8";
+                name_ = "<unknown key>";
+            }
         } else {
             std::cerr << "Cannot convert key name to UTF-8";
             name_ = "<unknown key>";
