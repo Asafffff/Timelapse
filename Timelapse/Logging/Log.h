@@ -18,7 +18,7 @@ ref class Log sealed {
     static String ^ GetLogPath();
 
   private:
-    static ConsoleLogHandler ^ consoleHandler;
+    static ConsoleLogHandler ^ consoleHandler = nullptr;
 };
 
 } // namespace Logging
