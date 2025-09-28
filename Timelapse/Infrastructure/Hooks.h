@@ -469,7 +469,7 @@ CodeCave(StatHook)
 
 namespace Hooks {
 // For botting
-bool CUserLocal__Update_Hook(bool enable) {
+inline bool CUserLocal__Update_Hook(bool enable) {
     typedef void(__stdcall * pfnCUserLocal__Update)(PVOID, PVOID);
     static auto CUserLocal__Update = reinterpret_cast<pfnCUserLocal__Update>(userlocalUpdateAddr);
 
@@ -480,7 +480,7 @@ bool CUserLocal__Update_Hook(bool enable) {
     return SetHook(enable, reinterpret_cast<void**>(&CUserLocal__Update), hook);
 }
 
-bool ChangeChannel(int channel) {
+inline bool ChangeChannel(int channel) {
     typedef int(__stdcall * pfnCField__SendTransferChannelRequest)(int nTargetChannel); // Changes Channel
     static auto CField__SendTransferChannelRequest = reinterpret_cast<pfnCField__SendTransferChannelRequest>(ccAddr);
 
@@ -500,7 +500,7 @@ bool ChangeChannel(int channel) {
     return false;
 }
 
-bool CLogin__OnRecommendWorldMessage_Hook(bool enable) {
+inline bool CLogin__OnRecommendWorldMessage_Hook(bool enable) {
     typedef void(__stdcall * pfnCLogin__OnRecommendWorldMessage)(PVOID, PVOID);
     static pfnCLogin__OnRecommendWorldMessage CLogin__OnRecommendWorldMessage = reinterpret_cast<pfnCLogin__OnRecommendWorldMessage>(cloginOnRecommendWorldAddr);
 

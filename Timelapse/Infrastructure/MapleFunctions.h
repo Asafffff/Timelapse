@@ -71,7 +71,7 @@ static void Teleport(POINT point) {
 #pragma endregion
 
 namespace PointerFuncs {
-bool isHooksEnabled = true; // For the future, disable pointers that requires Codecaves or function calls
+inline bool isHooksEnabled = true; // For the future, disable pointers that requires Codecaves or function calls
 
 // Retrieve Char Level
 static String ^ getCharLevel() {

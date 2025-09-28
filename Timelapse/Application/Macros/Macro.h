@@ -9,7 +9,7 @@
 
 using Timelapse::Logging::Log;
 
-bool DBG_Macro = false;
+inline bool DBG_Macro = false;
 enum class MacroType {
     LOOTMACRO = 1,
     ATTACKMACRO = 2,
