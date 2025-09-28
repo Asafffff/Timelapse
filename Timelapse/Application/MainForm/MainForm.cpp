@@ -9,6 +9,7 @@ using namespace System::IO;
 
 // Forward declarations
 void AutoLogin();
+void RunManagedMain();
 #pragma region General Form
 [STAThread] void Main() {
     Application::EnableVisualStyles();
@@ -16,17 +17,28 @@ void AutoLogin();
     Application::Run(gcnew MainForm);
     Application::Exit();
 }
-#pragma unmanaged
+
+#pragma managed(push, off)
+DWORD WINAPI MainThreadProc(LPVOID lpParameter) {
+    UNREFERENCED_PARAMETER(lpParameter);
+
+    RunManagedMain();
+    return 0;
+}
+
 BOOL WINAPI DllMain(HMODULE hModule, DWORD dwReason, PVOID lpvReserved) {
     GlobalVars::hDLL = hModule;
 
     switch (dwReason) {
     case DLL_PROCESS_ATTACH:
-        // GlobalVars::hDLL = hModule;
-        CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)&Main, nullptr, 0, nullptr);
+        DisableThreadLibraryCalls(hModule);
+
+        if (HANDLE threadHandle = CreateThread(nullptr, 0, MainThreadProc, nullptr, 0, nullptr)) {
+            CloseHandle(threadHandle);
+        }
         break;
     case DLL_PROCESS_DETACH:
-        FreeLibraryAndExitThread(hModule, 0);
+        break;
     case DLL_THREAD_ATTACH:
         break;
     case DLL_THREAD_DETACH:
@@ -39,7 +51,11 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD dwReason, PVOID lpvReserved) {
     return TRUE;
 }
 
-#pragma managed
+#pragma managed(pop)
+
+void RunManagedMain() {
+    Main();
+}
 void MainForm::MainForm_Load(Object ^ sender, EventArgs ^ e) {
     Log::Initialize(gcnew ConsoleLogHandler(this, &MainForm::AppendToConsoleLog));
     Log::WriteLineToConsole(":::::::::::::::::::::::::::::::::::::::::");
