@@ -5170,6 +5170,7 @@ using namespace Timelapse;
         this->bSendRemove->TabIndex = 18;
         this->bSendRemove->Text = L"Remove";
         this->bSendRemove->UseVisualStyleBackColor = true;
+        this->bSendRemove->Click += gcnew System::EventHandler(this, &MainForm::bSendRemove_Click);
         //
         // lvSendBlock
         //
@@ -5231,6 +5232,7 @@ using namespace Timelapse;
         this->bSendClear->TabIndex = 13;
         this->bSendClear->Text = L"Clear";
         this->bSendClear->UseVisualStyleBackColor = true;
+        this->bSendClear->Click += gcnew System::EventHandler(this, &MainForm::bSendClear_Click);
         //
         // bSendPacket
         //
@@ -5284,6 +5286,7 @@ using namespace Timelapse;
         this->bRecvRemove->TabIndex = 26;
         this->bRecvRemove->Text = L"Remove";
         this->bRecvRemove->UseVisualStyleBackColor = true;
+        this->bRecvRemove->Click += gcnew System::EventHandler(this, &MainForm::bRecvRemove_Click);
         //
         // lvRecvBlock
         //
@@ -5344,6 +5347,7 @@ using namespace Timelapse;
         this->bRecvClear->TabIndex = 21;
         this->bRecvClear->Text = L"Clear";
         this->bRecvClear->UseVisualStyleBackColor = true;
+        this->bRecvClear->Click += gcnew System::EventHandler(this, &MainForm::bRecvClear_Click);
         //
         // bRecvPacket
         //

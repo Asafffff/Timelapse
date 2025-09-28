@@ -254,6 +254,18 @@
     System::Void bRecvPacket_Click(System::Object ^ sender, System::EventArgs ^ e);
 
   private:
+    System::Void bSendRemove_Click(System::Object ^ sender, System::EventArgs ^ e);
+
+  private:
+    System::Void bSendClear_Click(System::Object ^ sender, System::EventArgs ^ e);
+
+  private:
+    System::Void bRecvRemove_Click(System::Object ^ sender, System::EventArgs ^ e);
+
+  private:
+    System::Void bRecvClear_Click(System::Object ^ sender, System::EventArgs ^ e);
+
+  private:
     System::Void cbBlinkGodmode_CheckedChanged(System::Object ^ sender, System::EventArgs ^ e);
 
   private:

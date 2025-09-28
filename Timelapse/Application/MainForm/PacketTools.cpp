@@ -10,6 +10,71 @@ void MainForm::bSendPacket_Click(Object ^ sender, EventArgs ^ e) {
     // SendPacket(gcnew String("28 00 ** ** ** 00"));
 }
 
+static void RemoveSelectedPacketNode(Windows::Forms::TreeView ^ treeView) {
+    if (treeView == nullptr)
+        return;
+
+    Windows::Forms::TreeNode ^ selectedNode = treeView->SelectedNode;
+    if (selectedNode == nullptr)
+        return;
+
+    Windows::Forms::TreeNode ^ parentNode = selectedNode->Parent;
+    Windows::Forms::TreeNode ^ nextSibling = selectedNode->NextNode;
+    Windows::Forms::TreeNode ^ previousSibling = selectedNode->PrevNode;
+    Windows::Forms::TreeNode ^ parentNextSibling = parentNode != nullptr ? parentNode->NextNode : nullptr;
+    Windows::Forms::TreeNode ^ parentPreviousSibling = parentNode != nullptr ? parentNode->PrevNode : nullptr;
+
+    Windows::Forms::TreeNode ^ candidateSelection = nextSibling != nullptr ? nextSibling : previousSibling;
+    if (candidateSelection == nullptr)
+        candidateSelection = parentNode;
+
+    treeView->BeginUpdate();
+    try {
+        selectedNode->Remove();
+
+        if (parentNode != nullptr && parentNode->Nodes->Count == 0) {
+            if (candidateSelection == parentNode)
+                candidateSelection = parentNextSibling != nullptr ? parentNextSibling : parentPreviousSibling;
+
+            parentNode->Remove();
+        }
+
+        if (candidateSelection != nullptr && candidateSelection->TreeView == nullptr)
+            candidateSelection = nullptr;
+
+        if (candidateSelection == nullptr && treeView->Nodes->Count > 0)
+            candidateSelection = treeView->Nodes[treeView->Nodes->Count - 1];
+
+        treeView->SelectedNode = candidateSelection;
+
+        if (candidateSelection != nullptr)
+            candidateSelection->EnsureVisible();
+    } finally {
+        treeView->EndUpdate();
+    }
+}
+
+static void ClearPacketNodes(Windows::Forms::TreeView ^ treeView) {
+    if (treeView == nullptr)
+        return;
+
+    treeView->BeginUpdate();
+    try {
+        treeView->Nodes->Clear();
+        treeView->SelectedNode = nullptr;
+    } finally {
+        treeView->EndUpdate();
+    }
+}
+
+void MainForm::bSendRemove_Click(System::Object ^ sender, System::EventArgs ^ e) {
+    RemoveSelectedPacketNode(tvSendPackets);
+}
+
+void MainForm::bSendClear_Click(System::Object ^ sender, System::EventArgs ^ e) {
+    ClearPacketNodes(tvSendPackets);
+}
+
 void MainForm::tbSendSpamDelay_KeyPress(Object ^ sender, Windows::Forms::KeyPressEventArgs ^ e) {
     if (!isKeyValid(sender, e, false))
         e->Handled = true; // If key is not valid, do nothing and indicate that it has been handled
@@ -32,6 +97,14 @@ void MainForm::bSendLog_Click(System::Object ^ sender, System::EventArgs ^ e) {
 #pragma region Receive Packets
 void MainForm::bRecvPacket_Click(Object ^ sender, EventArgs ^ e) {
     RecvPacket(tbRecvPacket->Text);
+}
+
+void MainForm::bRecvRemove_Click(System::Object ^ sender, System::EventArgs ^ e) {
+    RemoveSelectedPacketNode(tvRecvPackets);
+}
+
+void MainForm::bRecvClear_Click(System::Object ^ sender, System::EventArgs ^ e) {
+    ClearPacketNodes(tvRecvPackets);
 }
 #pragma endregion
 
