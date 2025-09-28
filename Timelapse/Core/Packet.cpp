@@ -2,6 +2,11 @@
 #include "Structs.h"
 #include "../Utilities/GeneralFunctions.h"
 #include "../Logging/Log.h"
+#include "../Libraries/detours.h"
+#include <mutex>
+#include <queue>
+#include <utility>
+#include <vector>
 
 using namespace Timelapse::Logging;
 
@@ -17,7 +22,118 @@ PVOID* ClientSocket = reinterpret_cast<PVOID*>(clientSocketAddr);
 typedef void(__thiscall* PacketSend)(PVOID clientSocket, COutPacket* packet); // Send packet from client to server
 PacketSend Send = reinterpret_cast<PacketSend>(COutPacketAddr);
 typedef void(__thiscall* PacketRecv)(PVOID clientSocket, CInPacket* packet); // Receive packet from client to server
-PacketRecv Recv = reinterpret_cast<PacketRecv>(CInPacketAddr);
+
+namespace {
+PacketRecv RecvDetour = reinterpret_cast<PacketRecv>(CInPacketAddr);
+std::mutex recvQueueMutex;
+std::queue<std::vector<unsigned char>> recvPacketQueue;
+bool recvLoggingEnabled = false;
+
+void ClearRecvQueueUnlocked() {
+    std::queue<std::vector<unsigned char>> empty;
+    std::swap(recvPacketQueue, empty);
+}
+
+void __fastcall RecvLogHook(PVOID clientSocket, void*, CInPacket* packet) {
+    if (recvLoggingEnabled) {
+        std::vector<unsigned char> bytes;
+
+        if (packet != nullptr) {
+            const unsigned char* dataPtr = nullptr;
+            if (packet->lpvData != nullptr) {
+                dataPtr = static_cast<unsigned char*>(packet->lpvData);
+            } else if (packet->pData != nullptr) {
+                dataPtr = packet->pData->Data;
+            } else if (packet->pHeader != nullptr) {
+                dataPtr = reinterpret_cast<unsigned char*>(packet->pHeader);
+            }
+
+            if (dataPtr != nullptr && packet->Size > 0)
+                bytes.assign(dataPtr, dataPtr + packet->Size);
+        }
+
+        {
+            std::lock_guard<std::mutex> lock(recvQueueMutex);
+            recvPacketQueue.push(std::move(bytes));
+        }
+    }
+
+    RecvDetour(clientSocket, packet);
+}
+
+bool ToggleRecvHook(bool enable) {
+    if (DetourTransactionBegin() != NO_ERROR)
+        return false;
+    if (DetourUpdateThread(GetCurrentThread()) != NO_ERROR) {
+        DetourTransactionAbort();
+        return false;
+    }
+    if ((enable ? DetourAttach : DetourDetach)(reinterpret_cast<PVOID*>(&RecvDetour), RecvLogHook) != NO_ERROR) {
+        DetourTransactionAbort();
+        return false;
+    }
+    if (DetourTransactionCommit() == NO_ERROR)
+        return true;
+
+    DetourTransactionAbort();
+    return false;
+}
+} // namespace
+
+namespace Timelapse {
+namespace PacketLogging {
+
+bool SetRecvLoggingEnabled(bool enable) {
+    if (enable == recvLoggingEnabled)
+        return true;
+
+    if (enable) {
+        {
+            std::lock_guard<std::mutex> lock(recvQueueMutex);
+            ClearRecvQueueUnlocked();
+        }
+
+        if (!ToggleRecvHook(true))
+            return false;
+
+        recvLoggingEnabled = true;
+        return true;
+    }
+
+    const bool previousState = recvLoggingEnabled;
+    recvLoggingEnabled = false;
+
+    if (!ToggleRecvHook(false)) {
+        recvLoggingEnabled = previousState;
+        return false;
+    }
+
+    std::lock_guard<std::mutex> lock(recvQueueMutex);
+    ClearRecvQueueUnlocked();
+    return true;
+}
+
+bool IsRecvLoggingEnabled() {
+    return recvLoggingEnabled;
+}
+
+bool TryDequeueRecvPacket(std::vector<unsigned char>& packetBytes) {
+    std::lock_guard<std::mutex> lock(recvQueueMutex);
+    if (recvPacketQueue.empty())
+        return false;
+
+    packetBytes = std::move(recvPacketQueue.front());
+    recvPacketQueue.pop();
+    return true;
+}
+
+void ClearRecvPacketQueue() {
+    std::lock_guard<std::mutex> lock(recvQueueMutex);
+    ClearRecvQueueUnlocked();
+}
+
+} // namespace PacketLogging
+} // namespace Timelapse
 
 void writeByte(String ^ % packet, BYTE byte) {
     packet += byte.ToString("X2") + " ";
@@ -115,7 +231,7 @@ bool RecvPacket(String ^ packetStr) {
     Packet.lpvData = atohx(tmpPacketStr, lpcszPacket);
 
     try {
-        Recv(*ClientSocket, &Packet);
+        RecvDetour(*ClientSocket, &Packet);
         return true;
     } catch (...) {
         return false;

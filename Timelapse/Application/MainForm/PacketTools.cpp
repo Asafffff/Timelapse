@@ -33,6 +33,23 @@ void MainForm::bSendLog_Click(System::Object ^ sender, System::EventArgs ^ e) {
 void MainForm::bRecvPacket_Click(Object ^ sender, EventArgs ^ e) {
     RecvPacket(tbRecvPacket->Text);
 }
+
+void MainForm::bRecvLog_Click(System::Object ^ sender, System::EventArgs ^ e) {
+    const bool enableLog = bRecvLog->Text->Equals("Enable Log");
+
+    if (!Timelapse::PacketLogging::SetRecvLoggingEnabled(enableLog)) {
+        Log::WriteLineToConsole("RecvPacket::ERROR: Failed to " + (enableLog ? "enable" : "disable") + " log hook.");
+        return;
+    }
+
+    GlobalRefs::bRecvPacketLog = Timelapse::PacketLogging::IsRecvLoggingEnabled();
+    bRecvLog->Text = GlobalRefs::bRecvPacketLog ? "Disable Log" : "Enable Log";
+
+    if (GlobalRefs::bRecvPacketLog)
+        this->tPacketLog->Enabled = true;
+    else if (!GlobalRefs::bSendPacketLog)
+        Timelapse::PacketLogging::ClearRecvPacketQueue();
+}
 #pragma endregion
 
 #pragma region Predefined Packets
@@ -251,6 +268,55 @@ void MainForm::tPacketLog_Tick(System::Object ^ sender, System::EventArgs ^ e) {
         }
 
         delete packet;
+    }
+
+    while (GlobalRefs::bRecvPacketLog) {
+        std::vector<unsigned char> packetBytes;
+        if (!Timelapse::PacketLogging::TryDequeueRecvPacket(packetBytes))
+            break;
+
+        String ^ packetHeader = String::Empty;
+        String ^ packetPayload = String::Empty;
+
+        if (packetBytes.size() >= 2) {
+            USHORT headerValue = static_cast<USHORT>(packetBytes[0] | (packetBytes[1] << 8));
+            writeUnsignedShort(packetHeader, headerValue);
+
+            for (size_t i = 2; i < packetBytes.size(); ++i)
+                writeByte(packetPayload, packetBytes[i]);
+        } else if (!packetBytes.empty()) {
+            writeByte(packetPayload, packetBytes[0]);
+        }
+
+        if (String::IsNullOrEmpty(packetHeader))
+            packetHeader = "????";
+
+        String ^ payloadLog = packetPayload->Length > 0 ? packetPayload : "<no payload>";
+        Log::WriteLineToConsole("RecvPacket::" + packetHeader + " <= " + payloadLog);
+
+        Windows::Forms::TreeView ^ treeView = Timelapse::MainForm::TheInstance->tvRecvPackets;
+        if (treeView != nullptr) {
+            const int MAX_PACKETS_PER_HEADER = 50;
+            treeView->BeginUpdate();
+
+            Windows::Forms::TreeNode ^ headerNode = nullptr;
+            if (treeView->Nodes->ContainsKey(packetHeader)) {
+                headerNode = treeView->Nodes[packetHeader];
+            } else {
+                headerNode = gcnew Windows::Forms::TreeNode(packetHeader);
+                headerNode->Name = packetHeader;
+                treeView->Nodes->Add(headerNode);
+            }
+
+            Windows::Forms::TreeNode ^ payloadNode = gcnew Windows::Forms::TreeNode(payloadLog);
+            headerNode->Nodes->Add(payloadNode);
+            headerNode->Expand();
+
+            while (headerNode->Nodes->Count > MAX_PACKETS_PER_HEADER)
+                headerNode->Nodes->RemoveAt(0);
+
+            treeView->EndUpdate();
+        }
     }
 
     /*if(!GlobalRefs::bSendPacketLog) {

@@ -254,6 +254,9 @@
     System::Void bRecvPacket_Click(System::Object ^ sender, System::EventArgs ^ e);
 
   private:
+    System::Void bRecvLog_Click(System::Object ^ sender, System::EventArgs ^ e);
+
+  private:
     System::Void cbBlinkGodmode_CheckedChanged(System::Object ^ sender, System::EventArgs ^ e);
 
   private:
