@@ -3,6 +3,7 @@
 #include "../Utilities/GeneralFunctions.h"
 #include "../Logging/Log.h"
 #include "../Libraries/detours.h"
+#include <algorithm>
 #include <mutex>
 #include <queue>
 #include <utility>
@@ -24,6 +25,8 @@ PacketSend Send = reinterpret_cast<PacketSend>(COutPacketAddr);
 typedef void(__thiscall* PacketRecv)(PVOID clientSocket, CInPacket* packet); // Receive packet from client to server
 
 namespace {
+constexpr size_t MAX_RECV_PACKET_BYTES = 0x1000; // Defensive upper bound for in-game packets.
+
 PacketRecv RecvDetour = reinterpret_cast<PacketRecv>(CInPacketAddr);
 std::mutex recvQueueMutex;
 std::queue<std::vector<unsigned char>> recvPacketQueue;
@@ -34,6 +37,63 @@ void ClearRecvQueueUnlocked() {
     std::swap(recvPacketQueue, empty);
 }
 
+size_t ResolvePacketByteCount(const CInPacket* packet) {
+    if (packet == nullptr)
+        return 0;
+
+    size_t candidate = 0;
+
+    if (packet->usDataLen > 0)
+        candidate = packet->usDataLen;
+    else if (packet->Size > 0)
+        candidate = packet->Size;
+
+    if (candidate == 0)
+        return 0;
+
+    return std::min(candidate, MAX_RECV_PACKET_BYTES);
+}
+
+template <typename T>
+bool CanReadObject(const T* pointer) {
+    return pointer != nullptr && !IsBadReadPtr(pointer, sizeof(T));
+}
+
+bool TryResolvePacketBytes(const CInPacket* packet, const unsigned char*& dataPtr, size_t& byteCount) {
+    if (packet == nullptr)
+        return false;
+
+    const size_t candidateBytes = ResolvePacketByteCount(packet);
+
+    if (candidateBytes > 0) {
+        if (packet->lpvData != nullptr && !IsBadReadPtr(packet->lpvData, candidateBytes)) {
+            dataPtr = static_cast<unsigned char*>(packet->lpvData);
+            byteCount = candidateBytes;
+            return true;
+        }
+
+        if (CanReadObject(packet->pData)) {
+            const unsigned char* potentialData = packet->pData->Data;
+            if (potentialData != nullptr && !IsBadReadPtr(potentialData, candidateBytes)) {
+                dataPtr = potentialData;
+                byteCount = candidateBytes;
+                return true;
+            }
+        }
+    }
+
+    if (CanReadObject(packet->pHeader)) {
+        const size_t headerBytes = sizeof(packet->pHeader->wHeader);
+        if (!IsBadReadPtr(&packet->pHeader->wHeader, headerBytes)) {
+            dataPtr = reinterpret_cast<const unsigned char*>(&packet->pHeader->wHeader);
+            byteCount = headerBytes;
+            return true;
+        }
+    }
+
+    return false;
+}
+
 void __fastcall RecvLogHook(PVOID clientSocket, void*, CInPacket* packet) {
     if (recvLoggingEnabled) {
         std::vector<unsigned char> bytes;
@@ -42,25 +102,24 @@ void __fastcall RecvLogHook(PVOID clientSocket, void*, CInPacket* packet) {
             const unsigned char* dataPtr = nullptr;
             size_t byteCount = 0;
 
-            if (packet->lpvData != nullptr) {
-                dataPtr = static_cast<unsigned char*>(packet->lpvData);
-                byteCount = static_cast<size_t>(packet->Size);
-            } else if (packet->pData != nullptr && packet->pData->Data != nullptr) {
-                dataPtr = packet->pData->Data;
-                byteCount = static_cast<size_t>(packet->Size);
-            } else if (packet->pHeader != nullptr) {
-                // Only the packet header metadata is available in this case. Copying more than the
-                // header width would read past the structure and crash the client, so limit the copy
-                // to the header's two bytes.
-                dataPtr = reinterpret_cast<unsigned char*>(&packet->pHeader->wHeader);
-                byteCount = sizeof(packet->pHeader->wHeader);
+            if (!TryResolvePacketBytes(packet, dataPtr, byteCount)) {
+                dataPtr = nullptr;
+                byteCount = 0;
             }
 
             if (dataPtr != nullptr && byteCount > 0) {
-                try {
-                    bytes.assign(dataPtr, dataPtr + byteCount);
-                } catch (...) {
-                    bytes.clear();
+                if (!IsBadReadPtr(dataPtr, byteCount)) {
+                    try {
+                        bytes.assign(dataPtr, dataPtr + byteCount);
+                    } catch (...) {
+                        bytes.clear();
+                    }
+                } else if (byteCount > sizeof(USHORT) && !IsBadReadPtr(dataPtr, sizeof(USHORT))) {
+                    try {
+                        bytes.assign(dataPtr, dataPtr + sizeof(USHORT));
+                    } catch (...) {
+                        bytes.clear();
+                    }
                 }
             }
         }
