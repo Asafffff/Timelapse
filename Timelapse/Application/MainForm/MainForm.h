@@ -12,7 +12,7 @@ using namespace System::Drawing;
 public
 ref class MainForm : public System::Windows::Forms::Form {
   public:
-    static MainForm ^ TheInstance;
+    static MainForm ^ TheInstance = nullptr;
     MainForm() {
         InitializeComponent();
         TheInstance = this;

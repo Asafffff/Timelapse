@@ -5,33 +5,7 @@
 
 using namespace Timelapse;
 using namespace Timelapse::Logging;
-
-Macro ^ GlobalRefs::macroHP = nullptr;
-Macro ^ GlobalRefs::macroMP = nullptr;
-Macro ^ GlobalRefs::macroAttack = nullptr;
-Macro ^ GlobalRefs::macroLoot = nullptr;
-bool GlobalRefs::isChangingField = false;
-bool GlobalRefs::isMapRushing = false;
-bool GlobalRefs::bClickTeleport = false;
-bool GlobalRefs::bMouseTeleport = false;
-bool GlobalRefs::bTeleport = false;
-bool GlobalRefs::bKami = false;
-bool GlobalRefs::bKamiLoot = false;
-bool GlobalRefs::bWallVac = false;
-bool GlobalRefs::bDupeX = false;
-bool GlobalRefs::bMMC = false;
-bool GlobalRefs::bUEMI = false;
-unsigned int GlobalRefs::cccsTimerTickCount = 0;
-bool GlobalRefs::isDragging = false;
-bool GlobalRefs::isEmbedding = false;
-System::Drawing::Point GlobalRefs::dragOffset = System::Drawing::Point::Empty;
-HWND GlobalRefs::hParent = nullptr;
-double GlobalRefs::formOpacity = 0.0;
-System::Collections::Generic::List<MapData ^> ^ GlobalRefs::maps = nullptr;
-bool GlobalRefs::bSendPacketLog = false;
-bool GlobalRefs::bRecvPacketLog = false;
-
-MainForm ^ MainForm::TheInstance = nullptr;
+using namespace System::IO;
 
 // Forward declarations
 void AutoLogin();

@@ -81,7 +81,7 @@ void MainForm::tbMP_KeyPress(Object ^ sender, Windows::Forms::KeyPressEventArgs 
 void MainForm::cbAttack_CheckedChanged(Object ^ sender, EventArgs ^ e) {
     const bool inputsEnabled = !this->cbAttack->Checked;
     this->tbAttackInterval->Enabled = inputsEnabled;
-    this->tbAttackMob->Enabled = inputsEnabled;
+    this->tbAttackMobCount->Enabled = inputsEnabled;
 
     if (this->cbAttack->Checked) {
         if (String::IsNullOrWhiteSpace(tbAttackInterval->Text)) {
@@ -134,7 +134,7 @@ void MainForm::comboAttackKey_SelectedIndexChanged(Object ^ sender, EventArgs ^ 
 void MainForm::cbLoot_CheckedChanged(Object ^ sender, EventArgs ^ e) {
     const bool inputsEnabled = !this->cbLoot->Checked;
     this->tbLootInterval->Enabled = inputsEnabled;
-    this->tbLootItem->Enabled = inputsEnabled;
+    this->tbLootItemCount->Enabled = inputsEnabled;
 
     if (this->cbLoot->Checked) {
         if (String::IsNullOrWhiteSpace(tbLootInterval->Text)) {
