@@ -4,6 +4,9 @@
 using namespace Timelapse;
 using namespace Timelapse::Logging;
 
+static void mapRush(int destMapID);
+void _stdcall AutoCC(int toChannel);
+
 #pragma region Map Rusher Tab
 // Get map id for special maps, manually found
 static int getSpecialMapID(int mapID, String ^ portalName) {
@@ -126,10 +129,10 @@ static MapData ^ getMap(int mapID) {
 // Breadth First Search (BFS) to find the shortest path between two maps
 static bool findShortestPathBFS(int startMapID, int destMapID, System::Collections::Generic::Dictionary<int, MapPath ^> ^ predecessors) {
     System::Collections::Generic::Queue<int> ^ toVisit = gcnew System::Collections::Generic::Queue<int>();
-    System::Collections::Generic::HashSet<int> ^ visited = gcnew System::Collections::Generic::HashSet<int>();
+    System::Collections::Generic::Dictionary<int, bool> ^ visited = gcnew System::Collections::Generic::Dictionary<int, bool>();
 
     toVisit->Enqueue(startMapID);
-    visited->Add(startMapID);
+    visited[startMapID] = true;
 
     while (toVisit->Count > 0) {
         int currentMapID = toVisit->Dequeue();
@@ -142,14 +145,14 @@ static bool findShortestPathBFS(int startMapID, int destMapID, System::Collectio
 
         for each (PortalData ^ portalData in currentMap->portals) {
             int nextMapID = portalData->toMapID;
-            if (visited->Contains(nextMapID))
+            if (visited->ContainsKey(nextMapID))
                 continue;
 
             MapData ^ nextMap = getMap(nextMapID);
             if (nextMap == nullptr)
                 continue; // Skip portals where the destination map metadata is missing
 
-            visited->Add(nextMapID);
+            visited[nextMapID] = true;
             predecessors[nextMapID] = gcnew MapPath(currentMapID, portalData);
             if (nextMapID == destMapID)
                 return true;

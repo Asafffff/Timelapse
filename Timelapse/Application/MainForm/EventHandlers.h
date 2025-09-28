@@ -116,10 +116,16 @@
     System::Void tbAttackInterval_KeyPress(System::Object ^ sender, System::Windows::Forms::KeyPressEventArgs ^ e);
 
   private:
+    System::Void tbAttackInterval_TextChanged(System::Object ^ sender, System::EventArgs ^ e);
+
+  private:
     System::Void tbAttackMobCount_KeyPress(System::Object ^ sender, System::Windows::Forms::KeyPressEventArgs ^ e);
 
   private:
     System::Void tbLootInterval_KeyPress(System::Object ^ sender, System::Windows::Forms::KeyPressEventArgs ^ e);
+
+  private:
+    System::Void tbLootInterval_TextChanged(System::Object ^ sender, System::EventArgs ^ e);
 
   private:
     System::Void tbLootItemCount_KeyPress(System::Object ^ sender, System::Windows::Forms::KeyPressEventArgs ^ e);

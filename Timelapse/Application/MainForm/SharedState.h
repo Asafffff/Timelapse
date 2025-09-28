@@ -18,30 +18,30 @@ bool isKeyValid(System::Object ^ sender, System::Windows::Forms::KeyPressEventAr
 namespace Timelapse {
 
 ref struct GlobalRefs {
-    static Macro ^ macroHP;
-    static Macro ^ macroMP;
-    static Macro ^ macroAttack;
-    static Macro ^ macroLoot;
-    static bool isChangingField;
-    static bool isMapRushing;
-    static bool bClickTeleport;
-    static bool bMouseTeleport;
-    static bool bTeleport;
-    static bool bKami;
-    static bool bKamiLoot;
-    static bool bWallVac;
-    static bool bDupeX;
-    static bool bMMC;
-    static bool bUEMI;
-    static unsigned int cccsTimerTickCount;
-    static bool isDragging;
-    static bool isEmbedding;
-    static System::Drawing::Point dragOffset;
-    static HWND hParent;
-    static double formOpacity;
-    static System::Collections::Generic::List<MapData ^> ^ maps;
-    static bool bSendPacketLog;
-    static bool bRecvPacketLog;
+    static Macro ^ macroHP = nullptr;
+    static Macro ^ macroMP = nullptr;
+    static Macro ^ macroAttack = nullptr;
+    static Macro ^ macroLoot = nullptr;
+    static bool isChangingField = false;
+    static bool isMapRushing = false;
+    static bool bClickTeleport = false;
+    static bool bMouseTeleport = false;
+    static bool bTeleport = false;
+    static bool bKami = false;
+    static bool bKamiLoot = false;
+    static bool bWallVac = false;
+    static bool bDupeX = false;
+    static bool bMMC = false;
+    static bool bUEMI = false;
+    static unsigned int cccsTimerTickCount = 0;
+    static bool isDragging = false;
+    static bool isEmbedding = false;
+    static System::Drawing::Point dragOffset = System::Drawing::Point::Empty;
+    static HWND hParent = nullptr;
+    static double formOpacity = 0.0;
+    static System::Collections::Generic::List<MapData ^> ^ maps = nullptr;
+    static bool bSendPacketLog = false;
+    static bool bRecvPacketLog = false;
 };
 
 } // namespace Timelapse

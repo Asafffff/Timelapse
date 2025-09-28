@@ -236,11 +236,6 @@ static int getMapID() {
     return ReadPointerSignedInt(UIMiniMapBase, OFS_MapID);
 }
 
-// Retrieve Char Position
-static System::Drawing::Point getCharPos() {
-    return System::Drawing::Point(getCharPosX(), getCharPosY());
-}
-
 // Retrieve Char X Position
 static int getCharPosX() {
     return ReadPointerSignedInt(UserLocalBase, OFS_CharX);
@@ -251,9 +246,9 @@ static int getCharPosY() {
     return ReadPointerSignedInt(UserLocalBase, OFS_CharY);
 }
 
-// Retrieve Mouse Position
-static System::Drawing::Point getMousePos() {
-    return System::Drawing::Point(getMousePosX(), getMousePosY());
+// Retrieve Char Position
+static System::Drawing::Point getCharPos() {
+    return System::Drawing::Point(getCharPosX(), getCharPosY());
 }
 
 // Retrieve Mouse X Position
@@ -264,6 +259,11 @@ static int getMousePosX() {
 // Retrieve Mouse Y Position
 static int getMousePosY() {
     return static_cast<int>(ReadMultiPointerSigned(InputBase, 2, OFS_MouseLocation, OFS_MouseY));
+}
+
+// Retrieve Mouse Position
+static System::Drawing::Point getMousePos() {
+    return System::Drawing::Point(getMousePosX(), getMousePosY());
 }
 
 // Retrieve Char Animation
