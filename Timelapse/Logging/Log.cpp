@@ -4,7 +4,6 @@ using namespace System;
 using namespace System::IO;
 using namespace Timelapse::Logging;
 
-ConsoleLogHandler ^ Log::consoleHandler = nullptr;
 
 void Log::Initialize(ConsoleLogHandler ^ handler) {
     consoleHandler = handler;

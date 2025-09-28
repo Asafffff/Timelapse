@@ -188,7 +188,7 @@ inline void __stdcall addSendPacket() {
     jmp dword ptr[animDelayAddrRet]
 } EndCodeCave*/
 
-CodeCave(StatHook){
+CodeCave(StatHook)
     push eax
     mov eax, [ebp + 0x08]
     mov [curHP], eax
@@ -208,14 +208,14 @@ CodeCave(StatHook){
     jmp dword ptr [statHookAddrRet]
 } EndCodeCave
 
-    CodeCave(MapNameHook){
+    CodeCave(MapNameHook)
         mov [mapNameAddr], ecx
         mov [ebp - 0x28], edi
         lea ecx, [ebp - 0x14]
         jmp dword ptr [mapNameHookAddrRet]
     } EndCodeCave
 
-    CodeCave(ItemVacHook){
+    CodeCave(ItemVacHook)
         pushad
         mov ecx, [ebp + 0x8]
         mov ebx, [ebp - 0x24]
@@ -239,7 +239,7 @@ CodeCave(StatHook){
         jmp dword ptr [itemVacAddrRet]
     } EndCodeCave
 
-    CodeCave(MouseFlyXHook){
+    CodeCave(MouseFlyXHook)
         push eax
         push ecx
         mov eax, [UserLocalBase]
@@ -263,7 +263,7 @@ CodeCave(StatHook){
         jmp dword ptr [mouseFlyXAddrRet]
     } EndCodeCave
 
-    CodeCave(MouseFlyYHook){
+    CodeCave(MouseFlyYHook)
         push eax
         push ecx
         mov eax, [UserLocalBase]
@@ -287,13 +287,13 @@ CodeCave(StatHook){
         jmp dword ptr [mouseFlyYAddrRet]
     } EndCodeCave
 
-    CodeCave(MobFreezeHook){
+    CodeCave(MobFreezeHook)
         mov [esi + 0x00000248], 0x06
         mov eax, [esi + 0x00000248]
         jmp dword ptr [mobFreezeAddrRet]
     } EndCodeCave
 
-    CodeCave(MobAutoAggroHook){
+    CodeCave(MobAutoAggroHook)
         call dword ptr [cVecCtrlWorkUpdateActiveCall] // calls CVecCtrl::WorkUpdateActive()
         push eax
         mov edx, [UserLocalBase]
@@ -308,7 +308,7 @@ CodeCave(StatHook){
         jmp dword ptr [mobAutoAggroAddrRet]
     } EndCodeCave
 
-    CodeCave(SpawnPointHook){
+    CodeCave(SpawnPointHook)
         push ecx
         push edx
         cmp dword ptr [esp + 0x8], 0x009BBD5D
@@ -330,7 +330,7 @@ CodeCave(StatHook){
         jmp dword ptr [spawnPointAddrRet]
     } EndCodeCave
 
-    CodeCave(ItemHook){
+    CodeCave(ItemHook)
         cmp dword ptr [esp], 0x005047B8
         jne NormalAPICall // If return not in CDropPool::TryPickUpDrop, skip
         push eax
@@ -344,7 +344,7 @@ CodeCave(StatHook){
         jmp dword ptr PtInRect
     } EndCodeCave
 
-    CodeCave(ItemFilterHook){
+    CodeCave(ItemFilterHook)
         push ebx
         cmp byte ptr [isItemLoggingEnabled], 0
         je Continue // Skip Logging Items
@@ -378,7 +378,7 @@ CodeCave(StatHook){
         jmp [itemFilterAddrRet]
     } EndCodeCave
 
-    CodeCave(MobFilter1Hook){
+    CodeCave(MobFilter1Hook)
         push ebx
         call [cInPacketDecode4Addr] // CInPacket::Decode4()
         cmp byte ptr [isMobFilterEnabled], 0
@@ -397,7 +397,7 @@ CodeCave(StatHook){
         jmp [mobFilter1AddrRet]
     } EndCodeCave
 
-    CodeCave(MobFilter2Hook){
+    CodeCave(MobFilter2Hook)
         push ebx
         call [cInPacketDecode4Addr] // CInPacket::Decode4()
         cmp byte ptr [isMobLoggingEnabled], 0
@@ -424,7 +424,7 @@ CodeCave(StatHook){
         jmp [mobFilter2AddrRet]
     } EndCodeCave
 
-    CodeCave(SendPacketLogHook){
+    CodeCave(SendPacketLogHook)
         mov dword ptr [sendPacketData], esp
         pushad
         call [addSendPacket]
@@ -432,7 +432,7 @@ CodeCave(StatHook){
         jmp [cOutPacketAddrRet]
     } EndCodeCave
 
-    CodeCave(DupeXHook){
+    CodeCave(DupeXHook)
         pushfd
         push eax
         push ecx
