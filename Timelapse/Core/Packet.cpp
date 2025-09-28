@@ -40,16 +40,29 @@ void __fastcall RecvLogHook(PVOID clientSocket, void*, CInPacket* packet) {
 
         if (packet != nullptr) {
             const unsigned char* dataPtr = nullptr;
+            size_t byteCount = 0;
+
             if (packet->lpvData != nullptr) {
                 dataPtr = static_cast<unsigned char*>(packet->lpvData);
-            } else if (packet->pData != nullptr) {
+                byteCount = static_cast<size_t>(packet->Size);
+            } else if (packet->pData != nullptr && packet->pData->Data != nullptr) {
                 dataPtr = packet->pData->Data;
+                byteCount = static_cast<size_t>(packet->Size);
             } else if (packet->pHeader != nullptr) {
-                dataPtr = reinterpret_cast<unsigned char*>(packet->pHeader);
+                // Only the packet header metadata is available in this case. Copying more than the
+                // header width would read past the structure and crash the client, so limit the copy
+                // to the header's two bytes.
+                dataPtr = reinterpret_cast<unsigned char*>(&packet->pHeader->wHeader);
+                byteCount = sizeof(packet->pHeader->wHeader);
             }
 
-            if (dataPtr != nullptr && packet->Size > 0)
-                bytes.assign(dataPtr, dataPtr + packet->Size);
+            if (dataPtr != nullptr && byteCount > 0) {
+                try {
+                    bytes.assign(dataPtr, dataPtr + byteCount);
+                } catch (...) {
+                    bytes.clear();
+                }
+            }
         }
 
         {
