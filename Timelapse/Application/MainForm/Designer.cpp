@@ -5333,6 +5333,7 @@ using namespace Timelapse;
         this->bRecvLog->TabIndex = 22;
         this->bRecvLog->Text = L"Enable Log";
         this->bRecvLog->UseVisualStyleBackColor = true;
+        this->bRecvLog->Click += gcnew System::EventHandler(this, &MainForm::bRecvLog_Click);
         //
         // bRecvClear
         //
