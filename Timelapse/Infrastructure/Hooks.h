@@ -15,7 +15,7 @@
 #define EndCodeCave }
 
 // Set Hook for function
-bool SetHook(bool enable, void** function, void* redirection) {
+inline bool SetHook(bool enable, void** function, void* redirection) {
     if (DetourTransactionBegin() != NO_ERROR)
         return FALSE;
     if (DetourUpdateThread(GetCurrentThread()) != NO_ERROR)
@@ -35,17 +35,17 @@ static HWND mapleWindow = nullptr;
 } // namespace GlobalVars
 
 namespace Assembly {
-ULONG curHP = 0, maxHP = 0, curMP = 0, maxMP = 0, curEXP = 0, maxEXP = 0, mapNameAddr = 0x0;
-int ItemX = 0, ItemY = 0, animDelay = 10; // TODO:: actually animDelay should be a Double
-double hpPercent = 0.00, mpPercent = 0.00, expPercent = 0.00;
-bool isItemLoggingEnabled = false, isItemFilterEnabled = false, isItemFilterWhiteList = true;
-bool isMobLoggingEnabled = false, isMobFilterEnabled = false, isMobFilterWhiteList = true;
-ULONG itemLogged = 0, itemFilterMesos = 0, mobLogged = 0;
+inline ULONG curHP = 0, maxHP = 0, curMP = 0, maxMP = 0, curEXP = 0, maxEXP = 0, mapNameAddr = 0x0;
+inline int ItemX = 0, ItemY = 0, animDelay = 10; // TODO:: actually animDelay should be a Double
+inline double hpPercent = 0.00, mpPercent = 0.00, expPercent = 0.00;
+inline bool isItemLoggingEnabled = false, isItemFilterEnabled = false, isItemFilterWhiteList = true;
+inline bool isMobLoggingEnabled = false, isMobFilterEnabled = false, isMobFilterWhiteList = true;
+inline ULONG itemLogged = 0, itemFilterMesos = 0, mobLogged = 0;
 static std::vector<ULONG>*itemList = new std::vector<ULONG>(), *mobList = new std::vector<ULONG>();
 static std::vector<SpawnControlData*>* spawnControl = new std::vector<SpawnControlData*>();
 static std::vector<COutPacket>* sendPacketLogQueue = new std::vector<COutPacket>();
-SendPacketData* sendPacketData;
-ULONG dupeXFoothold = 0;
+inline SendPacketData* sendPacketData = nullptr;
+inline ULONG dupeXFoothold = 0;
 
 // Find item name using item ID in the ItemsList resource
 static String ^ findItemNameFromID(int itemID) {

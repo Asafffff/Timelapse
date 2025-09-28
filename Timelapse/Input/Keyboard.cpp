@@ -65,8 +65,7 @@ Key_win::Key_win(MSG* message) {
         virtualKey_ = message->wParam;
         break;
     default:
-        std::logic_error("Cannot get key from non-key message");
-        break;
+        throw std::logic_error("Cannot get key from non-key message");
     }
     Key_win tmpKey(virtualKey_);
     code_ = tmpKey.code_;
@@ -142,15 +141,14 @@ void Keyboard::releaseKey(Key key) {
 }
 
 void Keyboard::spamKey(Key key, int times) {
-    if (times > 0) {
-        int i;
-        for (i = 0; i < times; i++) {
-            pressKey(key);
-            releaseKey(key);
-        }
+    if (times <= 0) {
+        return;
     }
-    pressKey(key);
-    releaseKey(key);
+
+    for (int i = 0; i < times; ++i) {
+        pressKey(key);
+        releaseKey(key);
+    }
 }
 
 void Keyboard::holdKeyDown(Key key, int time) {
